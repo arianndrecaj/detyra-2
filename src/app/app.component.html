@@ -1,0 +1,80 @@
+<form [formGroup]="mainForm">
+  <div class="test" formGroupName="question1">
+    <label type="text">Are you insured</label>
+    <mat-radio-group formControlName="answer">
+      <mat-radio-button value="1">No</mat-radio-button>
+      <mat-radio-button value="2">Yes</mat-radio-button>
+    </mat-radio-group>
+
+    @if (mainForm.get('question1.answer')?.value === '2') {
+      <div formGroupName="subQuestions">
+        <div formGroupName="subQuestion1">
+          <label type="text">Where were you insured</label>
+          <mat-radio-group formControlName="answer">
+            <mat-radio-button value="1">Kosovo</mat-radio-button>
+            <mat-radio-button value="2">Swiss</mat-radio-button>
+          </mat-radio-group>
+
+          @if (mainForm.get('question1.subQuestions.subQuestion1.answer')?.value === '1') {
+            <div formGroupName="subQuestion2">
+              <label type="text">Where in Kosovo?</label>
+              <mat-radio-group formControlName="answer">
+                <mat-radio-button value="1">Pristina</mat-radio-button>
+                <mat-radio-button value="2">Peje</mat-radio-button>
+              </mat-radio-group>
+
+              @if (mainForm.get('question1.subQuestions.subQuestion1.subQuestion2.answer')?. value === '2') {
+                <div formGroupName="subQuestion3">
+                  <label type="text">Why in peje</label>
+                  <mat-radio-group formControlName="answer">
+                    <mat-radio-button value="1">Per qef</mat-radio-button>
+                    <mat-radio-button value="2">Se di</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (isQuestion1Complete()) {
+  <div class="test" formGroupName="question2">
+    <label type="text">Have you ever used a computer</label>
+    <mat-radio-group formControlName="answer">
+      <mat-radio-button value="1">Po</mat-radio-button>
+      <mat-radio-button value="2">Jo</mat-radio-button>
+    </mat-radio-group>
+    @if (mainForm.get('question2.answer')?.value === '1') {
+      <div formGroupName="subQuestions">
+        <div formGroupName="subQuestion1">
+          <label type="text">What kind of pc</label>
+          <mat-radio-group formControlName="answer">
+            <mat-radio-button value="1">Hp</mat-radio-button>
+            <mat-radio-button value="2">Dell</mat-radio-button>
+            <mat-radio-button value="3">Samsung</mat-radio-button>
+          </mat-radio-group>
+          @if (mainForm.get('question2.subQuestions.subQuestion1.answer')?.value === '1') {
+            <div formGroupName="subQuestion2">
+              <label type="text">Is hp good or bd?</label>
+              <mat-radio-group formControlName="answer">
+                <mat-radio-button value="1">Good</mat-radio-button>
+                <mat-radio-button value="2">Bad</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+  }
+</form>
+
+
+
+
+
+
+<router-outlet />
+
