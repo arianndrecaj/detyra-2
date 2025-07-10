@@ -1,19 +1,11 @@
 import { RouterOutlet } from '@angular/router';
 import {ReactiveFormsModule, FormControl, FormBuilder, FormGroup, FormArray} from '@angular/forms';
 import {Component, inject} from '@angular/core';
-import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
-import {
-  MatAccordion,
-  MatExpansionPanel,
-  MatExpansionPanelHeader,
-  MatExpansionPanelTitle
-} from '@angular/material/expansion';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
-import {MatFormField, MatInput} from '@angular/material/input';
 
 @Component({
   selector: 'app-test',
-  imports: [RouterOutlet, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatAccordion, MatExpansionPanel, MatExpansionPanelTitle, MatExpansionPanelHeader, MatButtonToggleGroup, MatButtonToggle, MatFormField, MatInput, MatFormField],
+  imports: [RouterOutlet, ReactiveFormsModule, MatButtonToggleGroup, MatButtonToggle],
   templateUrl: './test.component.html',
   styleUrl: './test.component.scss'
 })
@@ -29,25 +21,9 @@ export class TestComponent {
   mainForm = this._fb.group({
     question1: this._fb.group({
       answer: [''],
-      subQuestions: this._fb.group({
-        subQuestion1: this._fb.group({
-          answer: [''],
-          subQuestion2: this._fb.group({
-            answer: [''],
-            subQuestion3: this._fb.group({
-              answer: [''],
-            })
-          })
-        }),
-      })
     }),
     question2: this._fb.group({
-      answers: this._fb.array([
-        this._fb.control(''),
-        this._fb.control(''),
-        this._fb.control(''),
-        this._fb.control(''),
-      ]),
+      answer: [''],
     }),
     question3: this._fb.group({
       answer: [''],
@@ -55,9 +31,9 @@ export class TestComponent {
     }),
   })
 
-  get answers(): FormArray {
-    return this.mainForm.get('question2.answers') as FormArray;
-  }
+  // get answers(): FormArray {
+  //   return this.mainForm.get('question2.answers') as FormArray;
+  // }
 
   isQuestionComplete(questionPath: string): boolean {
     const questionGroup = this.mainForm.get(questionPath) as FormGroup;

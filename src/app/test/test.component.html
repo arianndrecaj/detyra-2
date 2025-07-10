@@ -1,14 +1,27 @@
-<div class="container">
+<div class="wrapper">
   <div class="header">
     <h1>Gesundheitsdeklaration</h1>
-    <img src="assets/images/icon-menu.svg" alt="menu" />
+    <img src="/assets/images/icon-menu.svg" alt="menu" />
   </div>
 
   <div class="forma">
     <form [formGroup]="mainForm">
-      <p>asd</p>
+      <div formGroupName="question1">
+        <label>1. Sind oder waren Sie jemals bei der Helsana-Gruppe versichert?</label>
+        <mat-button-toggle-group formControlName="answer" class="custom-toggle-group" appearance="legacy">
+          <mat-button-toggle value="1">Nein</mat-button-toggle>
+          <mat-button-toggle value="2">Ja</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <div formGroupName="question2" [class.disabled]="!isQuestionComplete('question1')">
+        <label [class.disabled-label]="!isQuestionComplete('question1')">Test question 2</label>
+        <mat-button-toggle-group formControlName="answer" class="custom-toggle-group" appearance="legacy">
+          <mat-button-toggle value="1">Nein</mat-button-toggle>
+          <mat-button-toggle value="2">Ja</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
     </form>
+
   </div>
 </div>
-
-<router-outlet />

@@ -1,19 +1,62 @@
-.container{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  .header{
+.wrapper {
+  width: 90%;
+  max-width: 512px;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  .header {
     display: flex;
-    flex-direction: row;
-    gap: 46px;
-    margin: 0;
-    justify-content: flex-end;
-    width: 398px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
   }
   .forma{
-    width: 398px;
-    border: 1px solid black;
+    background: #f0fdf4;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .custom-toggle-group {
+    display: flex;
+    background: #d1fae5;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 12px;
 
+    ::ng-deep .mat-button-toggle {
+      flex: 1;
+      padding: 12px 0;
+      border: none;
+      background: transparent;
+      color: #6b7280;
+      font-size: 14px;
+      text-align: center;
+      transition: background 0.2s ease;
+    }
+
+    ::ng-deep .mat-button-toggle-checked {
+      background-color: green !important;
+      color: white !important;
+      padding: 5px;
+    }
+
+    ::ng-deep .mat-button-toggle + .mat-button-toggle {
+      border-left: 1px solid #a7f3d0;
+    }
   }
 }
+
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  user-select: none;
+}
+
+.disabled-label {
+  color: gray;
+  opacity: 0.6;
+  pointer-events: none; /* so text can't be selected */
+  user-select: none;
+}
+
+
+
