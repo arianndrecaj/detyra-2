@@ -1,62 +1,84 @@
+@import '../../assets/styles/breakpoints';
+@import '../../assets/styles/toggle-button';
+@import '../../assets/styles/accordion';
+
 .wrapper {
-  width: 90%;
-  max-width: 512px;
+  width: 100%;
+  max-width: 531px;
   background: white;
   border-radius: 10px;
-  padding: 20px;
+  //padding: 20px;
   .header {
     display: flex;
     justify-content: end;
     gap: 42px;
     align-items: center;
     margin-bottom: 20px;
+    margin-top: 20px;
   }
   .forma{
-    background: #f0fdf4;
     border-radius: 12px;
-    padding: 16px;
-  }
-  .custom-toggle-group {
-    display: flex;
-    background: #d1fae5;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 12px;
+    //padding: 16px;
+    width: 100%;
+    div {
+      margin-bottom: 24px;
+    }
 
-    ::ng-deep .mat-button-toggle {
+    ::ng-deep.mat-mdc-text-field-wrapper{
+      height: 53px;
+      border-radius: 11px;
+      width: 100%;
+      background-color: #28A54A1A;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 0;
+    }
+
+    .form-pairs {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      &-checkbox{
+        p{
+          margin-top: 10px;
+          margin-bottom: 0;
+        }
+        margin-bottom: 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+
+    .pair {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 0;
+    }
+
+    .pair-50-50 mat-form-field,
+    .pair-70-30 mat-form-field:first-child,
+    .pair-30-70 mat-form-field:last-child {
       flex: 1;
-      padding: 12px 0;
-      border: none;
-      background: transparent;
-      color: #6b7280;
-      font-size: 14px;
-      text-align: center;
-      transition: background 0.2s ease;
     }
 
-    ::ng-deep .mat-button-toggle-checked {
-      background-color: green !important;
-      color: white !important;
-      padding: 5px;
+    .pair-70-30 mat-form-field:first-child,
+    .pair-30-70 mat-form-field:last-child {
+      flex: 7;
     }
 
-    ::ng-deep .mat-button-toggle + .mat-button-toggle {
-      border-left: 1px solid #a7f3d0;
+    .pair-70-30 mat-form-field:last-child,
+    .pair-30-70 mat-form-field:first-child {
+      flex: 3;
+    }
+
+    ::ng-deep.mdc-line-ripple{
+      display: none !important;
     }
   }
-}
-
-.disabled {
-  opacity: 0.4;
-  pointer-events: none;
-  user-select: none;
-}
-
-.disabled-label {
-  color: gray;
-  opacity: 0.6;
-  pointer-events: none; /* so text can't be selected */
-  user-select: none;
 }
 
 

@@ -1,0 +1,28 @@
+mat-expansion-panel-header{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+::ng-deep.mat-expansion-panel-body{
+  padding: 0 22px 0 !important;
+}
+
+mat-expansion-panel,
+mat-expansion-panel-header,
+.mat-expansion-panel-content {
+  background: #28A54A0F !important;
+}
+
+.mat-focus-indicator{
+  background: none !important;
+}
+
+.mat-expansion-panel:not([class*=mat-elevation-z]) {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep.mat-mdc-form-field{
+  width: 100%;
+}
+
+

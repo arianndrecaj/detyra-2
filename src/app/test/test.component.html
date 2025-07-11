@@ -6,22 +6,115 @@
 
   <div class="forma">
     <form [formGroup]="mainForm">
-      <div formGroupName="question1">
-        <label>1. Sind oder waren Sie jemals bei der Helsana-Gruppe versichert?</label>
-        <mat-button-toggle-group formControlName="answer" class="custom-toggle-group" appearance="legacy">
-          <mat-button-toggle value="1">Nein</mat-button-toggle>
-          <mat-button-toggle value="2">Ja</mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="true" hideToggle>
+          <mat-expansion-panel-header>
+            <h2>1. Sind oder waren Sie jemals bei der Helsana-Gruppe versichert?</h2>
+          </mat-expansion-panel-header>
 
-      <div formGroupName="question2" [class.disabled]="!isQuestionComplete('question1')">
-        <label [class.disabled-label]="!isQuestionComplete('question1')">Test question 2</label>
-        <mat-button-toggle-group formControlName="answer" class="custom-toggle-group" appearance="legacy">
-          <mat-button-toggle value="1">Nein</mat-button-toggle>
-          <mat-button-toggle value="2">Ja</mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
+          <div formGroupName="question1">
+            <mat-button-toggle-group formControlName="answer" class="custom-toggle-group" appearance="legacy">
+              <mat-button-toggle value="1">Nein</mat-button-toggle>
+              <mat-button-toggle value="2">Ja</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel [disabled]="!isQuestionComplete('question1')" [expanded]="false">
+          <mat-expansion-panel-header>
+            <h2 [class.disabled-label]="!isQuestionComplete('question1')">2. Angaben zur Person</h2>
+          </mat-expansion-panel-header>
+
+          <div formGroupName="personalInfo" [class.disabled]="!isQuestionComplete('question1')">
+              <div>
+                <mat-form-field>
+                  <mat-select formControlName="occupation" placeholder="Aktueller Beruf">
+                     @for (option of occupationOptions; track option.value) {
+                      <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                    }
+                  </mat-select>
+                  @if (hasRequiredValidation('personalInfo.occupation')) {
+                    <mat-error>Select one!</mat-error>
+                  }
+                </mat-form-field>
+
+                <div class="form-row">
+                  <mat-form-field [class.filled]="mainForm.get('personalForm.grosse')?.value">
+                    <input type="number" formControlName="grosse" matInput placeholder="Grösse (cm)" value="grosse">
+                    @if (hasRequiredValidation('personalInfo.grosse')) {
+                      <mat-error>Enter gross!</mat-error>
+                    }
+                  </mat-form-field>
+
+                  <mat-form-field >
+                    <input type="number" formControlName="gewicht" matInput placeholder="Gewicht (kg)" value="gewicht">
+                    @if (hasRequiredValidation('personalInfo.gewicht')) {
+                      <mat-error>Enter gewicth!</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <mat-form-field>
+                  <input type="number" formControlName="bmi" matInput placeholder="BMI" value="bmi">
+                  @if (hasRequiredValidation('personalInfo.bmi')) {
+                    <mat-error>Enter bmi!</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel [disabled]="!isQuestionComplete('personalInfo')" [expanded]="false">
+          <mat-expansion-panel-header>
+            <h2 [class.disabled-label]="!isQuestionComplete('personalInfo')">3. Auskunft zum Gesundheitszustand</h2>
+          </mat-expansion-panel-header>
+
+          <div formGroupName="doctorInfo" [class.disabled]="!isQuestionComplete('personalInfo')">
+            <p [class.disabled-label]="!isQuestionComplete('personalInfo')">Name und Anschift des Arztes, der am besten über Ihren Gesundheitszustand Auskunft erteilen kann:</p>
+              <div>
+                <div class="form-pairs">
+                  <div class="pair pair-50-50">
+                    <mat-form-field>
+                      <input type="text" formControlName="vorname" matInput placeholder="Vorname" />
+                      @if (hasRequiredValidation('doctorInfo.vorname')) {
+                        <mat-error>Vorname ist erforderlich</mat-error>
+                      }
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input type="text" formControlName="nachname" matInput placeholder="Nachname" />
+                      @if (hasRequiredValidation('doctorInfo.nachname')) {
+                        <mat-error>Nachname ist erforderlich</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="pair pair-70-30">
+                    <mat-form-field>
+                      <input type="text" formControlName="strasse" matInput placeholder="Strasse" />
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input type="number" formControlName="nr" matInput placeholder="Nr" />
+                    </mat-form-field>
+                  </div>
+
+                  <div class="pair pair-30-70">
+                    <mat-form-field>
+                      <input type="number" formControlName="plz" matInput placeholder="PLZ" />
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input type="text" formControlName="ort" matInput placeholder="Ort" />
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-pairs-checkbox">
+                    <p>Keine Arzt vorhanden</p>
+                    <mat-checkbox></mat-checkbox>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
     </form>
-
   </div>
 </div>

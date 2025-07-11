@@ -10,15 +10,36 @@ h1{
   margin: 0;
 }
 
+h2{
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 14pt;
+  color: #000000;
+  margin: 0;
+}
+
 p{
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
   font-size: 12pt;
-  color: #000000;
+  color: #706C73;
+  margin-top: 0;
 }
 
 img{
   width: 20px;
   height: 20px;
   cursor: pointer;
+}
+
+.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+  user-select: none;
+}
+.disabled-label {
+  color: gray;
+  opacity: 0.6;
+  pointer-events: none;
+  user-select: none;
 }

@@ -1,0 +1,53 @@
+.custom-toggle-group {
+  display: flex;
+  background: #d1fae5;
+  border-radius: 11px;
+  overflow: hidden;
+  margin-top: 12px;
+  //buttons
+  ::ng-deep .mat-button-toggle {
+    display: flex;
+    flex: 1;
+    height: 53px;
+    //padding: 12px 0;
+    background: transparent;
+    color: #6b7280;
+    font-size: 14px;
+    text-align: center;
+    transition: background 0.2s ease;
+  }
+  .mat-button-toggle-standalone:not([class*=mat-elevation-z]),
+  .mat-button-toggle-group:not([class*=mat-elevation-z]) {
+    box-shadow: none !important;
+  }
+
+  //checked buttons
+  ::ng-deep .mat-button-toggle-checked {
+    background-color: transparent !important;
+    color: white !important;
+  }
+  //after checked buttons
+  ::ng-deep .mat-button-toggle-checked::before {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    background-color: #28A54A;
+    border-radius: 6px;
+    z-index: -1;
+  }
+  //middle line buttons
+  ::ng-deep .mat-button-toggle + .mat-button-toggle {
+    border-left: 1px solid #a7f3d0;
+  }
+  //removed tick sign
+  ::ng-deep .mat-pseudo-checkbox{
+    display: none !important;
+  }
+  //removed spacing from text to tick sign
+  ::ng-deep .mat-button-toggle-checked .mat-button-toggle-button:has(.mat-button-toggle-checkbox-wrapper){
+    padding: 0;
+  }
+}
+::ng-deep.mat-button-toggle-standalone:not([class*=mat-elevation-z]), .mat-button-toggle-group:not([class*=mat-elevation-z]){
+  box-shadow: none;
+}
