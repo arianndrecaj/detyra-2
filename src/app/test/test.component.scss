@@ -21,9 +21,8 @@
     //padding: 16px;
     width: 100%;
     div {
-      margin-bottom: 24px;
+      //margin-bottom: 24px;
     }
-
     ::ng-deep.mat-mdc-text-field-wrapper{
       height: 53px;
       border-radius: 11px;
@@ -41,42 +40,57 @@
       display: flex;
       flex-direction: column;
       gap: 0;
-      &-checkbox{
-        p{
+
+      &-checkbox {
+        p {
           margin-top: 10px;
           margin-bottom: 0;
         }
+
         margin-bottom: 0;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
       }
-    }
 
-    .pair {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 0;
-    }
+      .pair {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 0;
+      }
 
-    .pair-50-50 mat-form-field,
-    .pair-70-30 mat-form-field:first-child,
-    .pair-30-70 mat-form-field:last-child {
-      flex: 1;
-    }
+      .pair-50-50 mat-form-field,
+      .pair-70-30 mat-form-field:first-child,
+      .pair-30-70 mat-form-field:last-child {
+        flex: 1;
+      }
 
-    .pair-70-30 mat-form-field:first-child,
-    .pair-30-70 mat-form-field:last-child {
-      flex: 7;
-    }
+      .pair-70-30 mat-form-field:first-child,
+      .pair-30-70 mat-form-field:last-child {
+        flex: 7;
+      }
 
-    .pair-70-30 mat-form-field:last-child,
-    .pair-30-70 mat-form-field:first-child {
-      flex: 3;
+      .pair-70-30 mat-form-field:last-child,
+      .pair-30-70 mat-form-field:first-child {
+        flex: 3;
+      }
     }
 
     ::ng-deep.mdc-line-ripple{
       display: none !important;
+    }
+
+    .navigation-buttons{
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+        button{
+          border-radius: 0;
+        }
     }
   }
 }

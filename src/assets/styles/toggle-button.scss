@@ -4,6 +4,9 @@
   border-radius: 11px;
   overflow: hidden;
   margin-top: 12px;
+  &--gap{
+    margin-bottom: 16px;
+  }
   //buttons
   ::ng-deep .mat-button-toggle {
     display: flex;
@@ -47,7 +50,21 @@
   ::ng-deep .mat-button-toggle-checked .mat-button-toggle-button:has(.mat-button-toggle-checkbox-wrapper){
     padding: 0;
   }
+
 }
 ::ng-deep.mat-button-toggle-standalone:not([class*=mat-elevation-z]), .mat-button-toggle-group:not([class*=mat-elevation-z]){
   box-shadow: none;
+}
+
+.weiter-button{
+  width: 100%;
+  height: 53px;
+  background-color: #28A54A;
+  border-radius: 11px;
+  margin-bottom: 10px;
+  border: none;
+  cursor: pointer;
+  &--remove {
+    background-color: red;
+  }
 }
