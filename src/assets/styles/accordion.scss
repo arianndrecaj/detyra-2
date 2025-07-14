@@ -2,6 +2,7 @@ mat-expansion-panel-header{
   margin-top: 10px;
   margin-bottom: 10px;
   height: auto;
+  min-height: 40px;
 }
 
 ::ng-deep.mat-expansion-panel-body{
