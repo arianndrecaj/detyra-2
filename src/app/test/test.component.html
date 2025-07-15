@@ -55,7 +55,7 @@
                     }
                   </mat-form-field>
 
-                  <mat-form-field >
+                  <mat-form-field>
                     <input type="number" formControlName="gewicht" matInput placeholder="Gewicht (kg)" value="gewicht">
                     @if (hasRequiredValidation('personalInfo.gewicht')) {
                       <mat-error>Enter gewicth!</mat-error>
@@ -133,7 +133,7 @@
                   <div class="form-pairs-checkbox">
                     <p>Keine Arzt vorhanden</p>
                     <mat-checkbox formControlName="checkbox">
-                      {{ isCheckboxChecked ? 'Checked' : 'Unchecked' }}
+                      {{ getCheckboxValue('doctorInfo.checkbox') ? 'Checked' : 'Unchecked' }}
                     </mat-checkbox>
                   </div>
                 </div>
@@ -156,12 +156,12 @@
               formControlName="choice"
               class="custom-toggle-group custom-toggle-group--gap"
               appearance="legacy">
-              <mat-button-toggle value="1">Nein</mat-button-toggle>
-              <mat-button-toggle value="2">Ja</mat-button-toggle>
+              <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+              <mat-button-toggle value="Ja">Ja</mat-button-toggle>
             </mat-button-toggle-group>
-            @if (mainForm.get('medicalTreatments.choice')?.value === '2') {
+            @if (mainForm.get('medicalTreatments.choice')?.value === 'Ja') {
               <div formArrayName="choiceIfYes">
-                @for (choiceIfYes of choiceIfYes.controls; track $index; let i = $index) {
+                @for (group of getFormArray('medicalTreatments.choiceIfYes').controls; track $index; let i = $index) {
                   <div [formGroupName]="i">
                     <h3>{{ i + 1 }}) Behandlung/Untersuchung/Kontrolle</h3>
                 <p>Art der Krankheit / Störung (Diagnose), der Beschwerden oder Ergebnis / Grund der Behandlung/Untersuchung/Kontrolle?</p>
@@ -239,11 +239,20 @@
                     </div>
                   </div>
                   </div>
-                  <button class="weiter-button" (click)="addChoiceIfYes()" [disabled]="!canAddChoiceIfYes()" [class.disabled]="!canAddChoiceIfYes()"><p class="special-paragraph">+ Weitere Angabe erfassen</p></button>
                   @if (i > 0) {
-                    <button class="weiter-button weiter-button--remove" (click)="removeChoiceIfYes(i)"><p class="special-paragraph special-paragraph--remove">Remove</p></button>
+                    <button class="weiter-button weiter-button--remove" (click)="removeFromFormArray('medicalTreatments.choiceIfYes', i)">
+                      <p class="special-paragraph special-paragraph--remove">Remove</p>
+                    </button>
                   }
                 }
+                <button
+                  class="weiter-button"
+                  (click)="addToFormArray('medicalTreatments.choiceIfYes', this.createChoiceIfYesGroup.bind(this))"
+                  [disabled]="!canAddToFormArray('medicalTreatments.choiceIfYes')"
+                  [class.disabled]="!canAddToFormArray('medicalTreatments.choiceIfYes')"
+                >
+                  <p class="special-paragraph">+ Weitere Angabe erfassen</p>
+                </button>
               </div>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
@@ -252,7 +261,7 @@
             } @else {
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" [disabled]="!isQuestionComplete('medicalTreatments')" (click)="goToNextStep()">Next</button>
               </div>
             }
           </div>
@@ -271,26 +280,26 @@
               formControlName="choice"
               class="custom-toggle-group custom-toggle-group--gap"
               appearance="legacy">
-              <mat-button-toggle value="1">Nein</mat-button-toggle>
-              <mat-button-toggle value="2">Ja</mat-button-toggle>
+              <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+              <mat-button-toggle value="Ja">Ja</mat-button-toggle>
             </mat-button-toggle-group>
-            @if (mainForm.get('rejectedByInsurance.choice')?.value === '2') {
+            @if (mainForm.get('rejectedByInsurance.choice')?.value === 'Ja') {
               <p>Ja, warum?</p>
-                <mat-form-field>
-                  <input type="text" formControlName="reason" matInput placeholder="Hier eingeben..." />
-                  @if (hasRequiredValidation('rejectedByInsurance.reason')) {
-                    <mat-error>Enter reason!</mat-error>
-                  }
-                </mat-form-field>
+              <mat-form-field>
+                <input type="text" formControlName="reason" matInput placeholder="Hier eingeben..." />
+                @if (hasRequiredValidation('rejectedByInsurance.reason')) {
+                  <mat-error>Enter reason!</mat-error>
+                }
+              </mat-form-field>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()"
-                        [disabled]="mainForm.get('rejectedByInsurance.choice')?.value === '2'
-                ? !isQuestionComplete('rejectedByInsurance')
-                : !isQuestionComplete('rejectedByInsurance')">
-                  Next
-                </button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('rejectedByInsurance')">Next</button>
               </div>
+            } @else {
+            <div class="navigation-buttons">
+              <button mat-button (click)="goToPreviousStep()">Previous</button>
+              <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('rejectedByInsurance')">Next</button>
+            </div>
             }
           </div>
         </mat-expansion-panel>
@@ -309,8 +318,8 @@
               formControlName="misalignedTeeth"
               class="custom-toggle-group custom-toggle-group--gap"
               appearance="legacy">
-              <mat-button-toggle value="1">Nein</mat-button-toggle>
-              <mat-button-toggle value="2">Ja</mat-button-toggle>
+              <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+              <mat-button-toggle value="Ja">Ja</mat-button-toggle>
             </mat-button-toggle-group>
 
             <p>Besteht eine Fehlstellung des Kiefers?</p>
@@ -318,8 +327,8 @@
               formControlName="misalignedJaw"
               class="custom-toggle-group custom-toggle-group--gap"
               appearance="legacy">
-              <mat-button-toggle value="1">Nein</mat-button-toggle>
-              <mat-button-toggle value="2">Ja</mat-button-toggle>
+              <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+              <mat-button-toggle value="Ja">Ja</mat-button-toggle>
             </mat-button-toggle-group>
 
             <p>Sind Sie zur Zeit in zahnärztlicher Behandlung oder ist eine solche geplant?</p>
@@ -327,8 +336,8 @@
               formControlName="dentalTreatment"
               class="custom-toggle-group custom-toggle-group--gap"
               appearance="legacy">
-              <mat-button-toggle value="1">Nein</mat-button-toggle>
-              <mat-button-toggle value="2">Ja</mat-button-toggle>
+              <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+              <mat-button-toggle value="Ja">Ja</mat-button-toggle>
             </mat-button-toggle-group>
 
             <p>Wie häufig gehen Sie zur Zahnkontrolle?</p>
@@ -336,8 +345,9 @@
               formControlName="dentalCheckUp"
               class="custom-toggle-group custom-toggle-group--gap"
               appearance="legacy">
-              <mat-button-toggle value="1">Nein</mat-button-toggle>
-              <mat-button-toggle value="2">Ja</mat-button-toggle>
+              <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+              <mat-button-toggle value="1x pro Jahr">1x pro Jahr</mat-button-toggle>
+              <mat-button-toggle value="2x pro Jahr">2x pro Jahr</mat-button-toggle>
             </mat-button-toggle-group>
 
             <p>Wie häufig gehen Sie zur Zahnreinigung?</p>
@@ -345,12 +355,494 @@
               formControlName="dentalCleanUp"
               class="custom-toggle-group custom-toggle-group--gap"
               appearance="legacy">
-              <mat-button-toggle value="1">Nein</mat-button-toggle>
-              <mat-button-toggle value="2">Ja</mat-button-toggle>
+              <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+              <mat-button-toggle value="1x pro jahr">1x pro Jahr</mat-button-toggle>
+              <mat-button-toggle value="2x pro jahr">2x pro Jahr</mat-button-toggle>
             </mat-button-toggle-group>
+          </div>
+          <div class="navigation-buttons">
+            <button mat-button (click)="goToPreviousStep()">Previous</button>
+            <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('misaligned')">Next</button>
           </div>
         </mat-expansion-panel>
 
+        <mat-expansion-panel
+        [class.disabled]="!isQuestionComplete('misaligned')"
+        [disabled]="!isQuestionComplete('misaligned')"
+        [expanded]="currentStep === 6">
+          <mat-expansion-panel-header>
+            <h2>7. Invalidität und Geburtsgebrechen</h2>
+          </mat-expansion-panel-header>
+
+          <div formGroupName="disability" [class.disabled]="!isQuestionComplete('misaligned')">
+            <mat-button-toggle-group
+            formControlName="choice"
+            class="custom-toggle-group"
+            appearance="legacy">
+            <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+            <mat-button-toggle value="Ja">Ja</mat-button-toggle>
+            </mat-button-toggle-group>
+            @if (mainForm.get('disability.choice')?.value === 'Ja') {
+              <div formArrayName="ifDisabilityYes">
+                @for (group of getFormArray('disability.ifDisabilityYes').controls; track $index; let i = $index) {
+                  <div [formGroupName]="i">
+                    <h3>{{i + 1}}) Angabe</h3>
+                    <mat-form-field>
+                      <input type="text" formControlName="typeOfDisability" matInput placeholder="Art der Invalidität / des Geburtsgebrechens?" value="typeOfDisability">
+                      @if (hasRequiredValidation('disability.ifDisabilityYes.typeOfDisability')) {
+                        <mat-error>Enter disability!</mat-error>
+                      }
+                    </mat-form-field>
+                    <p>Bitte lade deine IV-Verfügung hoch:</p>
+                    <div class="upload-box" (click)="fileInput.click()">
+                      @if (file; as f) {
+                        <div class="file-preview">
+                          <i></i>
+                          <mat-icon color="primary">cloud_upload</mat-icon>
+                          <span>{{ f.name }}</span>
+                        </div>
+                      } @else {
+                        <div class="file-placeholder">
+                          <i></i>
+                          <mat-icon color="primary">cloud_upload</mat-icon>
+                          <span>Click to upload an image</span>
+                        </div>
+                      }
+                      <input
+                        type="file"
+                        #fileInput
+                        accept="image/*"
+                        (change)="onFileSelected($event, i)"
+                        formControlName="uploadIV"
+                        hidden
+                      />
+                    </div>
+                  </div>
+                  @if (i > 0) {
+                    <button class="weiter-button weiter-button--remove" (click)="removeFromFormArray('disability.ifDisabilityYes', i)">
+                      <p class="special-paragraph special-paragraph--remove">Remove</p></button>
+                  }
+                }
+                <button class="weiter-button"
+                        (click)="addToFormArray('disability.ifDisabilityYes', this.createIfDisability.bind(this))"
+                        [disabled]="!canAddToFormArray('disability.ifDisabilityYes')"
+                        [class.disabled]="!canAddToFormArray('disability.ifDisabilityYes')"
+                >
+                  <p class="special-paragraph">+ Weitere Angabe erfassen</p>
+                </button>
+                <div class="navigation-buttons">
+                  <button mat-button (click)="goToPreviousStep()">Previous</button>
+                  <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('disability')">Next</button>
+                </div>
+              </div>
+            } @else {
+              <div class="navigation-buttons">
+                <button mat-button (click)="goToPreviousStep()">Previous</button>
+                <button mat-raised-button color="primary" [disabled]="!isQuestionComplete('disability')" (click)="goToNextStep()">Next</button>
+              </div>
+            }
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel
+          [class.disabled]="!isQuestionComplete('disability')"
+          [disabled]="!isQuestionComplete('disability')"
+          [expanded]="currentStep === 7">
+          <mat-expansion-panel-header>
+            <h2>8. Medikamente und Suchtmittel</h2>
+          </mat-expansion-panel-header>
+
+          <div formGroupName="medications" [class.disabled]="!isQuestionComplete('disability')">
+            <mat-button-toggle-group
+              formControlName="choice"
+              class="custom-toggle-group"
+              appearance="legacy">
+              <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+              <mat-button-toggle value="Ja">Ja</mat-button-toggle>
+            </mat-button-toggle-group>
+            @if (mainForm.get('medications.choice')?.value === 'Ja') {
+              <div formArrayName="ifTakingMeds">
+                @for (medGroup of getFormArray('medications.ifTakingMeds').controls; track $index; let i = $index) {
+                  <div [formGroupName]="i">
+                    <h3>{{i + 1}}) Medikament</h3>
+                    <mat-form-field>
+                      <input type="text" formControlName="typeOfMed" matInput placeholder="Hier eingeben..." value="typeOfMed">
+                      @if (hasRequiredValidation('medications.ifTakingMeds.typeOfMed')) {
+                        <mat-error>Enter med!</mat-error>
+                      }
+                    </mat-form-field>
+                    <p>Bitte lade deine IV-Verfügung hoch:</p>
+                    <div class="form-row">
+                      <mat-form-field>
+                        <input matInput [matDatepicker]="startPicker" placeholder="Von" formControlName="startDate">
+                          <mat-icon matSuffix (click)="startPicker.open()">
+                            calendar_month
+                          </mat-icon>
+                        <mat-datepicker #startPicker></mat-datepicker>
+                      </mat-form-field>
+
+                      <mat-form-field>
+                        <input matInput [matDatepicker]="endPicker"
+                               [min]="medGroup.get('startDate')?.value"
+                               formControlName="endDate"
+                               placeholder="Bis">
+                          <mat-icon matSuffix (click)="startPicker.open()">
+                            calendar_month
+                          </mat-icon>
+                        <mat-datepicker #endPicker></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-pairs-checkbox">
+                      <p>Keine Arzt vorhanden</p>
+                      <mat-checkbox formControlName="checkbox">
+                        {{ medGroup.get('checkbox')?.value ? 'Checked' : 'Unchecked' }}
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  @if (i > 0) {
+                    <button class="weiter-button weiter-button--remove" (click)="removeFromFormArray('medications.ifTakingMeds', i)">
+                      <p class="special-paragraph special-paragraph--remove">Remove</p>
+                    </button>
+                  }
+                }
+                <button
+                  class="weiter-button"
+                  (click)="addToFormArray('medications.ifTakingMeds', this.createIfTakingMeds.bind(this))"
+                  [disabled]="!canAddToFormArray('medications.ifTakingMeds')"
+                  [class.disabled]="!canAddToFormArray('medications.ifTakingMeds')"
+                >
+                  <p class="special-paragraph">+ Weitere Angabe erfassen</p>
+                </button>
+              </div>
+              <div class="navigation-buttons">
+                <button mat-button (click)="goToPreviousStep()">Previous</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('medications')">Next</button>
+              </div>
+            } @else {
+              <div class="navigation-buttons">
+                <button mat-button (click)="goToPreviousStep()">Previous</button>
+                <button mat-raised-button color="primary" [disabled]="!isQuestionComplete('medications')" (click)="goToNextStep()">Next</button>
+              </div>
+            }
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel
+        [class.disabled]="!isQuestionComplete('medications')"
+        [disabled]="!isQuestionComplete('medications')"
+        [expanded]="currentStep === 8">
+        <mat-expansion-panel-header>
+          <h2>9. Haben Sie jemals regelmässig geraucht, Alkohol getrunken oder nehmen/nahmen Sie jemals Drogen zu sich?</h2>
+        </mat-expansion-panel-header>
+
+          <div formGroupName="drugs" [class.disabled]="!isQuestionComplete('medications')">
+            <mat-button-toggle-group
+            formControlName="choice"
+            class="custom-toggle-group custom-toggle-group--gap"
+            appearance="legacy">
+              <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+              <mat-button-toggle value="Ja">Ja</mat-button-toggle>
+            </mat-button-toggle-group>
+              @if (mainForm.get('drugs.choice')?.value === 'Ja') {
+                <p>Nehmen/nahmen Sie Drogen</p>
+                <mat-button-toggle-group
+                  formControlName="doYouTakeDrugs"
+                  class="custom-toggle-group custom-toggle-group--gap"
+                  appearance="legacy">
+                  <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+                  <mat-button-toggle value="Ja">Ja</mat-button-toggle>
+                </mat-button-toggle-group>
+                @if (mainForm.get('drugs.doYouTakeDrugs')?.value === 'Ja') {
+                  <div formArrayName="ifTakingDrugs">
+                    @for (drugsGroup of getFormArray('drugs.ifTakingDrugs').controls; track $index; let i = $index) {
+                      <div [formGroupName]="i">
+                        <h3>{{i + 1}}) Droge</h3>
+                        <p>Ja, welche?</p>
+                        <mat-form-field>
+                          <input type="text" formControlName="whichOne" matInput placeholder="Hier eingeben..." value="whichOne">
+                          @if (hasRequiredValidation('drugs.ifTakingDrugs.whichOne')) {
+                            <mat-error>Enter Drug!</mat-error>
+                          }
+                        </mat-form-field>
+                        <p>Wie oft?</p>
+                        <mat-form-field>
+                          <input type="text" formControlName="howOften" matInput placeholder="Hier eingeben..." value="howOften">
+                          @if (hasRequiredValidation('drugs.ifTakingDrugs.howOften')) {
+                            <mat-error>How Often?</mat-error>
+                          }
+                        </mat-form-field>
+                        <div class="form-row">
+                          <div>
+                            <p>Von</p>
+                            <mat-form-field>
+                              <input matInput [matDatepicker]="startPicker" placeholder="Von" formControlName="startDate">
+                              <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                              <mat-datepicker #startPicker></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+                          <div>
+                            <p>Bis</p>
+                            <mat-form-field>
+                              <input matInput [matDatepicker]="endPicker"
+                                     [min]="drugsGroup.get('startDate')?.value"
+                                     formControlName="endDate"
+                                     placeholder="Bis">
+                              <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                              <mat-datepicker #endPicker></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="form-pairs-checkbox">
+                          <p>Keine Arzt vorhanden</p>
+                          <mat-checkbox formControlName="checkbox">
+                            {{ drugsGroup.get('checkbox')?.value ? 'Checked' : 'Unchecked' }}
+                          </mat-checkbox>
+                        </div>
+                      </div>
+                      @if (i > 0) {
+                        <button class="weiter-button weiter-button--remove" (click)="removeFromFormArray('drugs.ifTakingDrugs', i)">
+                          <p class="special-paragraph special-paragraph--remove">Remove</p>
+                        </button>
+                      }
+                    }
+                    <button
+                      class="weiter-button"
+                      (click)="addToFormArray('drugs.ifTakingDrugs', this.createIfTakingDrugs.bind(this))"
+                      [disabled]="!canAddToFormArray('drugs.ifTakingDrugs')"
+                      [class.disabled]="!canAddToFormArray('drugs.ifTakingDrugs')"
+                    >
+                      <p class="special-paragraph">+ Weitere Angabe erfassen</p>
+                    </button>
+                  </div>
+                }
+                <p>Rauchen / rauchten Sie mehr als 20 Zigaretten oder 6 Zigarren oder 4 Pfeifen pro Tag?</p>
+                <mat-button-toggle-group
+                  formControlName="dailyCigar"
+                  class="custom-toggle-group custom-toggle-group--gap"
+                  appearance="legacy">
+                  <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+                  <mat-button-toggle value="Ja">Ja</mat-button-toggle>
+                </mat-button-toggle-group>
+                <p>Trinken / tranken Sie regelmässig Alkohol? (täglich ich über den Zeitraum von 1 Monat mehr als 0.5l Wein oder 1 l Bier oder 1.5 dl Spirituosen)</p>
+                <mat-button-toggle-group
+                  formControlName="dailyAlcohol"
+                  class="custom-toggle-group"
+                  appearance="legacy">
+                  <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+                  <mat-button-toggle value="Ja">Ja</mat-button-toggle>
+                </mat-button-toggle-group>
+                <div class="navigation-buttons">
+                  <button mat-button (click)="goToPreviousStep()">Previous</button>
+                  <button mat-raised-button color="primary"
+                          (click)="goToNextStep()"
+                          [disabled]="!isQuestionComplete('drugs')">
+                    Next
+                  </button>
+                </div>
+              } @else {
+                <div class="navigation-buttons">
+                  <button mat-button (click)="goToPreviousStep()">Previous</button>
+                  <button mat-raised-button color="primary" (click)="goToNextStep()"
+                          [disabled]="!isQuestionComplete('drugs')">
+                    Next
+                  </button>
+                </div>
+              }
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel
+        [class.disabled]="!isQuestionComplete('drugs')"
+        [disabled]="!isQuestionComplete('drugs')"
+        [expanded]="currentStep === 9">
+          <mat-expansion-panel-header>
+            <h2>10. Weitere Fragen</h2>
+          </mat-expansion-panel-header>
+          <div formGroupName="furtherQuestions" [class.disabled]="!isQuestionComplete('drugs')">
+            <mat-button-toggle-group
+            formControlName="choice"
+            class="custom-toggle-group custom-toggle-group--gap"
+            appearance="legacy">
+              <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+              <mat-button-toggle value="Ja">Ja</mat-button-toggle>
+            </mat-button-toggle-group>
+            @if (mainForm.get('furtherQuestions.choice')?.value === 'Ja') {
+              <p>Voraussichtlicher Geburtstermin</p>
+              <mat-form-field>
+                <input matInput [matDatepicker]="startPicker" placeholder="Von" formControlName="pregnancyExpected">
+                <mat-icon matSuffix (click)="startPicker.open()">
+                  calendar_month
+                </mat-icon>
+                <mat-datepicker #startPicker></mat-datepicker>
+              </mat-form-field>
+              <div class="navigation-buttons">
+                <button mat-button (click)="goToPreviousStep()">Previous</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('furtherQuestions')">
+                  Next
+                </button>
+              </div>
+            } @else {
+              <div class="navigation-buttons">
+                <button mat-button (click)="goToPreviousStep()">Previous</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('furtherQuestions')">
+                  Next
+                </button>
+              </div>
+            }
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel
+        [class.disabled]="!isQuestionComplete('furtherQuestions')"
+        [disabled]="!isQuestionComplete('furtherQuestions')"
+        [expanded]="currentStep === 10">
+          <mat-expansion-panel-header>
+            <h2>11. Lade bitte deine vorhandenen Berichte wie Operationsbericht, Austrittsbericht oder Arztbericht hoch.</h2>
+          </mat-expansion-panel-header>
+            <div formGroupName="medicalReport" [class.disabled]="!isQuestionComplete('furtherQuestions')">
+              <div class="upload-box" (click)="fileInput.click()">
+                @if (file; as f) {
+                  <div class="file-preview">
+                    <i></i>
+                    <mat-icon color="primary">cloud_upload</mat-icon>
+                    <span>{{ f.name }}</span>
+                  </div>
+                } @else {
+                  <div class="file-placeholder">
+                    <i></i>
+                    <mat-icon color="primary">cloud_upload</mat-icon>
+                    <span>Click to upload an image</span>
+                  </div>
+                }
+                <input
+                  type="file"
+                  #fileInput
+                  accept="image/*"
+                  (change)="onFileSelected($event, 0)"
+                  formControlName="uploadedReport"
+                  hidden
+                />
+              </div>
+              <div class="navigation-buttons">
+                <button mat-button (click)="goToPreviousStep()">Previous</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('medicalReport')">
+                  Next
+                </button>
+              </div>
+            </div>
+        </mat-expansion-panel>
+
+        <button class="dental-part">Dental Fragen</button>
+
+        <mat-expansion-panel
+        [class.disabled]="!isQuestionComplete('medicalReport')"
+        [disabled]="!isQuestionComplete('medicalReport')"
+        [expanded]="currentStep === 11">
+          <mat-expansion-panel-header>
+            <h2>12. Wann fand der letzte zahnärztliche Kontrolluntersuch statt? (dieser darf nicht länger als 1 Jahr zurückliegen)</h2>
+          </mat-expansion-panel-header>
+          <div formGroupName="dentalCheckUp" [class.disabled]="!isQuestionComplete('medicalReport')">
+            <mat-form-field>
+              <input matInput [min]="minDate" [matDatepicker]="startPicker" placeholder="Von" formControlName="checkUpDate">
+              <mat-icon matSuffix (click)="startPicker.open()">
+                calendar_month
+              </mat-icon>
+              <mat-datepicker #startPicker></mat-datepicker>
+            </mat-form-field>
+            <div class="navigation-buttons">
+              <button mat-button (click)="goToPreviousStep()">Previous</button>
+              <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('dentalCheckUp')">
+                Next
+              </button>
+            </div>
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel
+        [class.disabled]="!isQuestionComplete('dentalCheckUp')"
+        [disabled]="!isQuestionComplete('dentalCheckUp')"
+        [expanded]="currentStep === 12">
+          <mat-expansion-panel-header>
+            <h2>13. Besteht eine Krankheit, die den Zustand der Zähne beeinflusst/beeinflussen könnte?</h2>
+          </mat-expansion-panel-header>
+            <div formGroupName="teethDisease" [class.disabled]="!isQuestionComplete('dentalCheckUp')">
+            <mat-button-toggle-group
+              formControlName="choice"
+              class="custom-toggle-group custom-toggle-group--gap"
+              appearance="legacy">
+              <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+              <mat-button-toggle value="Ja">Ja</mat-button-toggle>
+            </mat-button-toggle-group>
+            @if (mainForm.get('teethDisease.choice')?.value === 'Ja') {
+              <p>Ja, welche?</p>
+              <mat-form-field>
+                <input type="text" formControlName="whichOne" matInput placeholder="Hier eingeben..." value="whichOne">
+                @if (hasRequiredValidation('teethDisease.whichOne')) {
+                  <mat-error>Enter Disease!</mat-error>
+                }
+              </mat-form-field>
+              <div class="navigation-buttons">
+                <button mat-button (click)="goToPreviousStep()">Previous</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('teethDisease')">
+                  Next
+                </button>
+              </div>
+            } @else {
+              <div class="navigation-buttons">
+                <button mat-button (click)="goToPreviousStep()">Previous</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('teethDisease')">
+                  Next
+                </button>
+              </div>
+            }
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel
+        [class.disabled]="!isQuestionComplete('teethDisease')"
+        [disabled]="!isQuestionComplete('teethDisease')"
+        [expanded]="currentStep === 13">
+          <mat-expansion-panel-header>
+            <h2>14. Erfolgten bisher zahnärztliche Kontrollen und Zahnsteinentfernungen?</h2>
+          </mat-expansion-panel-header>
+          <div formGroupName="upToDateCheckUp" [class.disabled]="!isQuestionComplete('teethDisease')">
+            <mat-button-toggle-group
+              formControlName="choice"
+              class="custom-toggle-group custom-toggle-group--gap"
+              appearance="legacy">
+              <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+              <mat-button-toggle value="Ja">Ja</mat-button-toggle>
+            </mat-button-toggle-group>
+            @if (mainForm.get('upToDateCheckUp.choice')?.value === 'Ja') {
+              <p>Ja, welche?</p>
+              <mat-form-field>
+                <mat-select formControlName="whatIntervals" placeholder="Aktueller Beruf">
+                  @for (option of intervalOptions; track option.value) {
+                    <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                  }
+                </mat-select>
+                @if (hasRequiredValidation('personalInfo.occupation')) {
+                  <mat-error>Select one!</mat-error>
+                }
+              </mat-form-field>
+              <div class="navigation-buttons">
+                <button mat-button (click)="goToPreviousStep()">Previous</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('upToDateCheckUp')">
+                  Next
+                </button>
+              </div>
+            } @else {
+              <div class="navigation-buttons">
+                <button mat-button (click)="goToPreviousStep()">Previous</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('upToDateCheckUp')">
+                  Next
+                </button>
+              </div>
+            }
+          </div>
+        </mat-expansion-panel>
       </mat-accordion>
     </form>
   </div>

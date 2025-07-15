@@ -34,6 +34,17 @@
       display: flex;
       gap: 8px;
       margin-bottom: 0;
+      div {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+    }
+
+    .form-col {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
     }
 
     .form-pairs {
@@ -96,4 +107,49 @@
 }
 
 
+.upload-box {
+  border: 2px dashed #28a745;
+  background-color: #f0fdf4;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  transition: border-color 0.3s;
+  margin-bottom: 16px;
+
+  .file-preview,
+  .file-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #28a745;
+    font-weight: bold;
+  }
+
+  i {
+    font-size: 20px;
+  }
+}
+
+.mat-datepicker-toggle{
+  z-index: 10 !important;
+}
+
+.dental-part{
+  display: flex;
+  width: 104pt;
+  height: 26pt;
+  border-radius: 4pt;
+  background-color: #28A54A;
+  border: none;
+  align-items: center;
+  justify-content: center;
+  margin-left: 20px;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14pt;
+  margin-top: 10px;
+}
 
