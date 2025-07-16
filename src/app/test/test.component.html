@@ -12,17 +12,17 @@
             <h2>1. Sind oder waren Sie jemals bei der Helsana-Gruppe versichert?</h2>
           </mat-expansion-panel-header>
 
-            <div formGroupName="question1">
+            <div formGroupName="everBeenInsuredWithHelsana">
               <mat-button-toggle-group
                 formControlName="answer"
                 class="custom-toggle-group"
                 appearance="legacy">
-                <mat-button-toggle value="1">Nein</mat-button-toggle>
-                <mat-button-toggle value="2">Ja</mat-button-toggle>
+                <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+                <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
               <div class="navigation-buttons">
                 <button mat-button disabled>Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('question1')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('everBeenInsuredWithHelsana')">Next</button>
               </div>
             </div>
 
@@ -30,14 +30,14 @@
 
 
         <mat-expansion-panel
-          [class.disabled]="!isQuestionComplete('question1')"
-          [disabled]="!isQuestionComplete('question1')"
+          [class.disabled]="!isQuestionComplete('everBeenInsuredWithHelsana')"
+          [disabled]="!isQuestionComplete('everBeenInsuredWithHelsana')"
           [expanded]="currentStep === 1">
           <mat-expansion-panel-header>
             <h2>2. Angaben zur Person</h2>
           </mat-expansion-panel-header>
 
-            <div formGroupName="personalInfo" [class.disabled]="!isQuestionComplete('question1')">
+            <div formGroupName="personalInfo" [class.disabled]="!isQuestionComplete('everBeenInsuredWithHelsana')">
               <div>
                 <mat-form-field>
                   <mat-select formControlName="occupation" placeholder="Aktueller Beruf">
@@ -53,21 +53,24 @@
                 <div class="form-row">
                   <mat-form-field [class.filled]="mainForm.get('personalForm.grosse')?.value">
                     <input type="number" formControlName="grosse" matInput placeholder="Grösse (cm)" value="grosse">
+                    <span matSuffix>cm</span>
                     @if (hasRequiredValidation('personalInfo.grosse')) {
                       <mat-error>Enter gross!</mat-error>
                     }
                   </mat-form-field>
 
                   <mat-form-field>
-                    <input type="number" formControlName="gewicht" matInput placeholder="Gewicht (kg)" value="gewicht">
+                    <input type="number" formControlName="gewicht" matInput placeholder="Gewicht"/>
+                    <span matSuffix>kg</span>
                     @if (hasRequiredValidation('personalInfo.gewicht')) {
-                      <mat-error>Enter gewicth!</mat-error>
+                      <mat-error>Enter Gewicht!</mat-error>
                     }
                   </mat-form-field>
                 </div>
 
                 <mat-form-field>
                   <input type="number" formControlName="bmi" matInput placeholder="BMI" value="bmi">
+                  <span matSuffix>BMI</span>
                   @if (hasRequiredValidation('personalInfo.bmi')) {
                     <mat-error>Enter bmi!</mat-error>
                   }
@@ -95,11 +98,17 @@
                       @if (hasRequiredValidation('doctorInfo.vorname')) {
                         <mat-error>Vorname ist erforderlich</mat-error>
                       }
+                      @if (mainForm.get('doctorInfo.vorname')?.hasError('pattern')) {
+                        <mat-error>Nur text erlaubt</mat-error>
+                      }
                     </mat-form-field>
                     <mat-form-field>
                       <input type="text" formControlName="nachname" matInput placeholder="Nachname" />
                       @if (hasRequiredValidation('doctorInfo.nachname')) {
                         <mat-error>Nachname ist erforderlich</mat-error>
+                      }
+                      @if (mainForm.get('doctorInfo.nachname')?.hasError('pattern')) {
+                        <mat-error>Nur text erlaubt</mat-error>
                       }
                     </mat-form-field>
                   </div>
@@ -386,11 +395,11 @@
                     </mat-form-field>
                     <p>Bitte lade deine IV-Verfügung hoch:</p>
                     <div class="upload-box" (click)="fileInput.click()">
-                      @if (file; as f) {
+                      @if (imagePreview[i]; as f) {
                         <div class="file-preview">
                           <i></i>
                           <mat-icon color="primary">cloud_upload</mat-icon>
-                          <span>{{ f.name }}</span>
+                          <span>{{ f }}</span>
                         </div>
                       } @else {
                         <div class="file-placeholder">
@@ -659,12 +668,12 @@
             <h2>11. Lade bitte deine vorhandenen Berichte wie Operationsbericht, Austrittsbericht oder Arztbericht hoch.</h2>
           </mat-expansion-panel-header>
             <div formGroupName="medicalReport" [class.disabled]="!isQuestionComplete('furtherQuestions')">
-              <div class="upload-box" (click)="fileInput.click()">
-                @if (file; as f) {
+              <div class="upload-box" (click)="fileInput2.click()">
+                @if (imagePreview[2]; as f) {
                   <div class="file-preview">
                     <i></i>
                     <mat-icon color="primary">cloud_upload</mat-icon>
-                    <span>{{ f.name }}</span>
+                    <span>{{ f }}</span>
                   </div>
                 } @else {
                   <div class="file-placeholder">
@@ -675,9 +684,9 @@
                 }
                 <input
                   type="file"
-                  #fileInput
+                  #fileInput2
                   accept="image/*"
-                  (change)="onFileSelected($event, 0)"
+                  (change)="onFileSelected($event, 2)"
                   formControlName="uploadedReport"
                   hidden
                 />

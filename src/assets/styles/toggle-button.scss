@@ -4,6 +4,7 @@
   border-radius: 11px;
   overflow: hidden;
   margin-top: 12px;
+  border: 1px solid transparent;
   transition: none;
 
   &:has(.mat-button-toggle-checked) {

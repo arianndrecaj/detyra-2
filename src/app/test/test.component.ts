@@ -32,7 +32,7 @@ import {MatIconModule} from '@angular/material/icon';
 })
 export class TestComponent {
   private _fb = inject(FormBuilder);
-  file: File | null = null;
+  currentStep = 0;
   imagePreview: string[] = [];
   minDate: Date;
   occupationOptions = OCCUPATION_OPTIONS;
@@ -43,11 +43,18 @@ export class TestComponent {
   teethOptions4 = TEETH4_OPTION;
   teethOptions5 = TEETH5_OPTIONS;
   teethOptions6 = TEETH6_OPTIONS;
-  currentStep = 0;
 
   constructor() {
-    this.mainForm.valueChanges.subscribe(value => {
-      console.log('Form changed:', value);
+    this.mainForm.valueChanges.subscribe(() => {
+      const completed: any = {};
+
+      Object.keys(this.mainForm.controls).forEach(key => {
+        const control = this.mainForm.get(key);
+        if (control && control.valid && control.value) {
+          completed[key] = control.value;
+        }
+      });
+      console.log('Completed form groups:', completed);
     });
 
     this.minDate = new Date();
@@ -71,7 +78,7 @@ export class TestComponent {
   }
 
   mainForm = this._fb.group({
-    question1: this._fb.group({
+    everBeenInsuredWithHelsana: this._fb.group({
       answer: ['', Validators.required],
     }),
     personalInfo: this._fb.group({
@@ -81,8 +88,8 @@ export class TestComponent {
       bmi: ['',Validators.required],
     }),
     doctorInfo: this._fb.group({
-      vorname: ['',Validators.required],
-      nachname: ['',Validators.required],
+      vorname: ['',[Validators.required, Validators.pattern(/^[a-zA-ZäöüÄÖÜß\\s]+$/)]],
+      nachname: ['',[Validators.required, Validators.pattern(/^[a-zA-ZäöüÄÖÜß\\s]+$/)]],
       strasse: ['',Validators.required],
       nr: ['',Validators.required],
       plz: ['',Validators.required],
@@ -343,22 +350,14 @@ export class TestComponent {
         return group.valid && arrayValid;
       }
     }
-
     return isValidRecursively(group);
   }
 
-  onFileSelected(event: Event,  index: number) {
+  onFileSelected(event: Event, index: number): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      if (index === 0) {
-        this.file = file;
-      }
-      this.file = file;
       this.imagePreview[index] = file.name;
     }
   }
-
-
-
 }
