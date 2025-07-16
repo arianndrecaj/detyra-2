@@ -4,10 +4,15 @@
 
 .wrapper {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   max-width: 531px;
   background: white;
   border-radius: 10px;
-  //padding: 20px;
+  @include mobile-view{
+    width: 100%;
+  }
   .header {
     display: flex;
     justify-content: end;
@@ -15,11 +20,17 @@
     align-items: center;
     margin-bottom: 20px;
     margin-top: 20px;
+    @include mobile-view{
+      width: 100%;
+    }
   }
   .forma{
     border-radius: 12px;
     //padding: 16px;
     width: 100%;
+    @include mobile-view{
+      width: 100%;
+    }
     div {
       //margin-bottom: 24px;
     }
@@ -28,16 +39,36 @@
       border-radius: 11px;
       width: 100%;
       background-color: #28A54A1A;
+      border: 1px solid transparent;
+      transition: none;
+      @include mobile-view{
+        width: 100%;
+      }
+      &:has(input:focus, input:not(:placeholder-shown)) {
+        border: 1px solid #28A54A;
+      }
     }
+
+    ::ng-deep mat-form-field.mat-form-field-should-float .mat-mdc-text-field-wrapper,
+    ::ng-deep mat-form-field.mat-focused .mat-mdc-text-field-wrapper {
+      border: 1px solid #28A54A;
+    }
+
 
     .form-row {
       display: flex;
       gap: 8px;
       margin-bottom: 0;
+      @include mobile-view{
+        width: 100%;
+      }
       div {
         display: flex;
         flex-direction: column;
         flex: 1;
+        @include mobile-view{
+          width: 100%;
+        }
       }
     }
 
@@ -45,13 +76,18 @@
       display: flex;
       flex-direction: column;
       flex: 1;
+      @include mobile-view{
+        width: 100%;
+      }
     }
 
     .form-pairs {
       display: flex;
       flex-direction: column;
       gap: 0;
-
+      @include mobile-view{
+        width: 100%;
+      }
       &-checkbox {
         p {
           margin-top: 10px;
@@ -68,22 +104,34 @@
         display: flex;
         gap: 8px;
         margin-bottom: 0;
+        @include mobile-view{
+          width: 100%;
+        }
       }
 
       .pair-50-50 mat-form-field,
       .pair-70-30 mat-form-field:first-child,
       .pair-30-70 mat-form-field:last-child {
         flex: 1;
+        @include mobile-view{
+          width: 100%;
+        }
       }
 
       .pair-70-30 mat-form-field:first-child,
       .pair-30-70 mat-form-field:last-child {
         flex: 7;
+        @include mobile-view{
+          width: 100%;
+        }
       }
 
       .pair-70-30 mat-form-field:last-child,
       .pair-30-70 mat-form-field:first-child {
         flex: 3;
+        @include mobile-view{
+          width: 100%;
+        }
       }
     }
 
@@ -117,7 +165,9 @@
   cursor: pointer;
   transition: border-color 0.3s;
   margin-bottom: 16px;
-
+  @include mobile-view{
+    width: 100%;
+  }
   .file-preview,
   .file-placeholder {
     display: flex;
@@ -126,8 +176,10 @@
     gap: 10px;
     color: #28a745;
     font-weight: bold;
+    @include mobile-view{
+      width: 100%;
+    }
   }
-
   i {
     font-size: 20px;
   }
@@ -135,6 +187,9 @@
 
 .mat-datepicker-toggle{
   z-index: 10 !important;
+  @include mobile-view{
+    width: 100%;
+  }
 }
 
 .dental-part{
@@ -150,6 +205,65 @@
   color: white;
   font-family: 'Roboto', sans-serif;
   font-size: 14pt;
-  margin-top: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  @include mobile-view{
+    width: auto;
+  }
+}
+
+.teeth-wrapper{
+  margin-bottom: 50px;
+
+  .top-numbers,
+  .bottom-numbers{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    p{
+      margin-bottom: 0;
+    }
+  }
+}
+
+.teeth-wrapper-with-line{
+  margin-bottom: 50px;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 450px;
+    height: 20%;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background-image: linear-gradient(to bottom, #000 25%, rgba(0, 0, 0, 0) 25%);
+    background-size: 1px 8px;
+    background-repeat: repeat-y;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  .top-numbers,
+  .bottom-numbers{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    p{
+      margin-bottom: 0;
+    }
+  }
+}
+
+.entfernen{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  p{
+    margin-bottom: 0;
+    align-items: center;
+    color: red;
+    cursor: pointer;
+    display: flex;
+  }
 }
 

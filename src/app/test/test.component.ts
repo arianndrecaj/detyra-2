@@ -1,34 +1,31 @@
-import { RouterOutlet } from '@angular/router';
-import {
-  ReactiveFormsModule,
-  FormControl,
-  FormBuilder,
-  FormGroup,
-  FormArray,
-  Validators,
-  AbstractControl
-} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Component, inject} from '@angular/core';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
-import {MatError, MatFormField, MatHint, MatInput, MatLabel} from '@angular/material/input';
+import {MatError, MatFormField, MatInput, MatInputModule, MatLabel} from '@angular/material/input';
 import {MatSelect} from '@angular/material/select';
-import {MatOption, provideNativeDateAdapter} from '@angular/material/core';
-import {OCCUPATION_OPTIONS, INTERVAL_OPTIONS} from '../../option';
+import {MatNativeDateModule, MatOption, provideNativeDateAdapter} from '@angular/material/core';
+import {
+  INTERVAL_OPTIONS,
+  OCCUPATION_OPTIONS,
+  TEETH1_OPTIONS,
+  TEETH2_OPTIONS,
+  TEETH3_OPTION,
+  TEETH4_OPTION,
+  TEETH5_OPTIONS,
+  TEETH6_OPTIONS
+} from '../../option';
 import {MatAccordion, MatExpansionPanel, MatExpansionPanelHeader} from '@angular/material/expansion';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatButton} from '@angular/material/button';
 import {checkboxValidator} from '../validators/checkbox-validator';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
 
 
 @Component({
   selector: 'app-test',
-  imports: [RouterOutlet, MatIconModule,MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonToggleGroup, MatButtonToggle, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatError, MatCheckbox, MatButton, MatHint,MatDatepickerModule, MatNativeDateModule],
+  imports: [MatIconModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonToggleGroup, MatButtonToggle, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatError, MatCheckbox, MatButton, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './test.component.html',
   providers: [provideNativeDateAdapter()],
   styleUrl: './test.component.scss',
@@ -40,19 +37,13 @@ export class TestComponent {
   minDate: Date;
   occupationOptions = OCCUPATION_OPTIONS;
   intervalOptions = INTERVAL_OPTIONS;
+  teethOptions1 = TEETH1_OPTIONS;
+  teethOptions2 =  TEETH2_OPTIONS;
+  teethOptions3 = TEETH3_OPTION;
+  teethOptions4 = TEETH4_OPTION;
+  teethOptions5 = TEETH5_OPTIONS;
+  teethOptions6 = TEETH6_OPTIONS;
   currentStep = 0;
-
-  onFileSelected(event: Event,  index: number) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      if (index === 0) {
-        this.file = file;
-      }
-      this.file = file;
-      this.imagePreview[index] = file.name;
-    }
-  }
 
   constructor() {
     this.mainForm.valueChanges.subscribe(value => {
@@ -62,7 +53,6 @@ export class TestComponent {
     this.minDate = new Date();
     this.minDate.setFullYear(this.minDate.getFullYear() - 1);
   }
-
 
   ngOnInit() {
     const doctorGroup = this.mainForm.get('doctorInfo') as FormGroup;
@@ -79,7 +69,6 @@ export class TestComponent {
       });
     });
   }
-
 
   mainForm = this._fb.group({
     question1: this._fb.group({
@@ -150,9 +139,47 @@ export class TestComponent {
     }),
     treatmentPlanned: this._fb.group({
       choice: ['', Validators.required],
-      //qtu ke met
-    })
+      whenIsTreatmentPlanned: ['', Validators.required],
+    }),
+    abrasionsOrErosions: this._fb.group({
+      choice: ['', Validators.required],
+      whichOne: ['', Validators.required],
+    }),
+    misalignmentTeethOrJaw: this._fb.group({
+      choice: ['', Validators.required],
+      whatTypeOfMisalignment: ['', Validators.required],
+    }),
+    areFillingsPresent: this._fb.group({
+      choice: ['', Validators.required],
+      conditionOfFillings: ['', Validators.required],
+    }),
+    fixedOrRemovedDenture: this._fb.group({
+      choice: ['', Validators.required],
+      conditionOfRemovedDenture: ['', Validators.required],
+    }),
+    oralHygiene: this._fb.group({
+      conditionOfOralHygiene: ['', Validators.required],
+    }),
+    periodontium: this._fb.group({
+      conditionOfPeriodontium: ['', Validators.required],
+    }),
+    missingUnReplacedTeeth: this.createTeethGroup(),
+    decayedTeeth: this.createTeethGroup(),
+    rootCanalTreatedTeeth: this.createTeethGroup(),
+    accidentDamagedTeeth: this.createTeethGroup(),
   })
+
+  createTeethGroup(): FormGroup {
+    return this._fb.group({
+      choice: ['', Validators.required],
+      markTeeth: ['', Validators.required],
+      markTeeth2: ['', Validators.required],
+      markTeeth3: ['', Validators.required],
+      markTeeth4: ['', Validators.required],
+      markTeeth5: ['', Validators.required],
+      markTeeth6: ['', Validators.required],
+    });
+  }
 
   createIfTakingDrugs() {
     const drugsGroup = this._fb.group({
@@ -177,7 +204,7 @@ export class TestComponent {
     const medGroup = this._fb.group({
       typeOfMed: ['', Validators.required],
       startDate: ['', Validators.required],
-      endDate: [{ value: '', disabled: false }],
+      endDate: ['',Validators.required],
       checkbox: [false]
     });
     medGroup.get('checkbox')?.valueChanges.subscribe(checked => {
@@ -282,6 +309,15 @@ export class TestComponent {
       return true;
     }
 
+    if ((questionPath === 'missingUnReplacedTeeth' || questionPath === 'decayedTeeth' || questionPath === 'rootCanalTreatedTeeth' || questionPath === 'accidentDamagedTeeth') && choiceControl?.value === 'Ja') {
+      const controlsToCheck = ['markTeeth', 'markTeeth2', 'markTeeth3', 'markTeeth4', 'markTeeth5', 'markTeeth6'];
+
+      return controlsToCheck.some(controlName => {
+        const ctrl = group.get(controlName);
+        return ctrl?.value?.length > 0;
+      });
+    }
+
     const isValidRecursively = (ctrl: AbstractControl, parent?: FormGroup): boolean => {
       if (ctrl instanceof FormGroup) {
         return Object.entries(ctrl.controls).every(([key, childCtrl]) => {
@@ -310,6 +346,19 @@ export class TestComponent {
 
     return isValidRecursively(group);
   }
+
+  onFileSelected(event: Event,  index: number) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      if (index === 0) {
+        this.file = file;
+      }
+      this.file = file;
+      this.imagePreview[index] = file.name;
+    }
+  }
+
 
 
 }

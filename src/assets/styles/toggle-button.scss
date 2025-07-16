@@ -4,6 +4,11 @@
   border-radius: 11px;
   overflow: hidden;
   margin-top: 12px;
+  transition: none;
+
+  &:has(.mat-button-toggle-checked) {
+    border: 1px solid #28A54A;
+  }
   &--gap{
     margin-bottom: 16px;
   }
@@ -38,6 +43,7 @@
     border-radius: 6px;
     z-index: -1;
   }
+
   //middle line buttons
   ::ng-deep .mat-button-toggle + .mat-button-toggle {
     border-left: 1px solid #a7f3d0;
@@ -68,3 +74,16 @@
     background-color: red;
   }
 }
+
+::ng-deep .tick-toggle-group .mat-button-toggle-checked::after {
+  content: '✓';
+  color: white;
+  font-size: 18px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+
