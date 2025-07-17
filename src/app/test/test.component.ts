@@ -1,10 +1,11 @@
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
-import {MatError, MatFormField, MatInput, MatInputModule, MatLabel} from '@angular/material/input';
+import {MatError, MatFormField, MatInput, MatInputModule} from '@angular/material/input';
 import {MatSelect} from '@angular/material/select';
 import {MatNativeDateModule, MatOption, provideNativeDateAdapter} from '@angular/material/core';
 import {
+  DRUGS_HOW_OFTEN_OPTIONS,
   INTERVAL_OPTIONS,
   OCCUPATION_OPTIONS,
   TEETH1_OPTIONS,
@@ -25,16 +26,17 @@ import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-test',
-  imports: [MatIconModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonToggleGroup, MatButtonToggle, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatError, MatCheckbox, MatButton, MatDatepickerModule, MatNativeDateModule],
+  imports: [MatIconModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonToggleGroup, MatButtonToggle, MatFormField, MatSelect, MatOption, MatInput, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatError, MatCheckbox, MatButton, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './test.component.html',
   providers: [provideNativeDateAdapter()],
   styleUrl: './test.component.scss',
 })
-export class TestComponent {
+export class TestComponent implements OnInit{
   private _fb = inject(FormBuilder);
   currentStep = 0;
   imagePreview: string[] = [];
   minDate: Date;
+  NAME_PATTERN = /^[a-zA-ZäöüÄÖÜß\s]+$/;
   occupationOptions = OCCUPATION_OPTIONS;
   intervalOptions = INTERVAL_OPTIONS;
   teethOptions1 = TEETH1_OPTIONS;
@@ -43,17 +45,17 @@ export class TestComponent {
   teethOptions4 = TEETH4_OPTION;
   teethOptions5 = TEETH5_OPTIONS;
   teethOptions6 = TEETH6_OPTIONS;
+  drugOptions = DRUGS_HOW_OFTEN_OPTIONS;
 
   constructor() {
     this.mainForm.valueChanges.subscribe(() => {
-      const completed: any = {};
-
-      Object.keys(this.mainForm.controls).forEach(key => {
-        const control = this.mainForm.get(key);
-        if (control && control.valid && control.value) {
-          completed[key] = control.value;
+      const completed = Object.entries(this.mainForm.controls).reduce((acc, [key, control]) => {
+        if (control?.valid && control?.value) {
+          acc[key] = control.value;
         }
-      });
+        return acc;
+      }, {} as any);
+
       console.log('Completed form groups:', completed);
     });
 
@@ -88,8 +90,8 @@ export class TestComponent {
       bmi: ['',Validators.required],
     }),
     doctorInfo: this._fb.group({
-      vorname: ['',[Validators.required, Validators.pattern(/^[a-zA-ZäöüÄÖÜß\\s]+$/)]],
-      nachname: ['',[Validators.required, Validators.pattern(/^[a-zA-ZäöüÄÖÜß\\s]+$/)]],
+      vorname: ['',[Validators.required, Validators.pattern(this.NAME_PATTERN)]],
+      nachname: ['',[Validators.required, Validators.pattern(this.NAME_PATTERN)]],
       strasse: ['',Validators.required],
       nr: ['',Validators.required],
       plz: ['',Validators.required],
@@ -102,7 +104,7 @@ export class TestComponent {
     }),
     rejectedByInsurance: this._fb.group({
       choice: ['', Validators.required],
-      reason: ['',Validators.required]
+      reason: ['',[Validators.required,Validators.pattern(this.NAME_PATTERN)]]
     }),
     misaligned: this._fb.group({
       misalignedTeeth: ['',Validators.required],
@@ -146,7 +148,7 @@ export class TestComponent {
     }),
     treatmentPlanned: this._fb.group({
       choice: ['', Validators.required],
-      whenIsTreatmentPlanned: ['', Validators.required],
+      whenIsTreatmentPlanned: ['',  [Validators.required, Validators.pattern(this.NAME_PATTERN)]],
     }),
     abrasionsOrErosions: this._fb.group({
       choice: ['', Validators.required],
@@ -227,7 +229,7 @@ export class TestComponent {
 
   createIfDisability(){
     return this._fb.group({
-      typeOfDisability: ['', Validators.required],
+      typeOfDisability: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
       uploadIV: ['',Validators.required],
     });
   }
@@ -242,7 +244,7 @@ export class TestComponent {
       doctorStreet: ['', Validators.required],
       doctorNumber: ['', Validators.required],
       doctorZipCode: ['', Validators.required],
-      doctorCity: ['', Validators.required],
+      doctorCity: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
     });
   }
 
@@ -275,14 +277,14 @@ export class TestComponent {
 
   hasRequiredValidation(path: string) {
     const control = this.mainForm.get(path);
-    return control?.hasError('required') && control?.touched;
+    return (control?.hasError('required') || control?.hasError('pattern')) && control?.touched;
   }
+
 
   getCheckboxValue(path: string): boolean {
     const control = this.mainForm.get(path);
     return control?.value === true;
   }
-
 
   goToNextStep() {
     const stepKeys = Object.keys(this.mainForm.controls);
@@ -343,7 +345,11 @@ export class TestComponent {
     };
 
     if (questionPath === 'drugs') {
+      const choice = group.get('choice')?.value;
       const doYouTakeDrugs = group.get('doYouTakeDrugs')?.value;
+      if (choice === 'Nein' || doYouTakeDrugs === 'Nein') {
+        return true;
+      }
       if (doYouTakeDrugs === 'Ja') {
         const formArray = group.get('ifTakingDrugs') as FormArray;
         const arrayValid = formArray.controls.every(item => isValidRecursively(item));
@@ -360,4 +366,5 @@ export class TestComponent {
       this.imagePreview[index] = file.name;
     }
   }
+
 }

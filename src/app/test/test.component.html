@@ -21,11 +21,9 @@
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
               <div class="navigation-buttons">
-                <button mat-button disabled>Previous</button>
                 <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('everBeenInsuredWithHelsana')">Next</button>
               </div>
             </div>
-
         </mat-expansion-panel>
 
 
@@ -143,7 +141,7 @@
                     </mat-form-field>
                   </div>
                   <div class="form-pairs-checkbox">
-                    <p>Keine Arzt vorhanden</p>
+                    <p class="black">Keine Arzt vorhanden</p>
                     <mat-checkbox formControlName="checkbox">
                       {{ getCheckboxValue('doctorInfo.checkbox') ? 'Checked' : 'Unchecked' }}
                     </mat-checkbox>
@@ -163,7 +161,7 @@
           </mat-expansion-panel-header>
 
           <div formGroupName="medicalTreatments" [class.disabled]="!isQuestionComplete('doctorInfo')">
-            <p [class.disabled-label]="!isQuestionComplete('doctorInfo')"> <img src="/assets/images/Icon.png" alt="icon" /> Sind Sie zurzeit in einer laufenden Behandlung, ist eine solche geplant oder waren Sie in den letzten 5 Jahren in ärztlicher/zahnärztlicher/naturärztlicher/therapeutischer Behandlung/Untersuchung/Kontrolle oder wurde Ihnen eine solche empfohlen, jedoch noch nicht durchgeführt?</p>
+            <p [class.disabled-label]="!isQuestionComplete('doctorInfo')"> <img src="/assets/images/Icon.png" alt="icon" title="hover"/> Sind Sie zurzeit in einer laufenden Behandlung, ist eine solche geplant oder waren Sie in den letzten 5 Jahren in ärztlicher/zahnärztlicher/naturärztlicher/therapeutischer Behandlung/Untersuchung/Kontrolle oder wurde Ihnen eine solche empfohlen, jedoch noch nicht durchgeführt?</p>
             <mat-button-toggle-group
               formControlName="choice"
               class="custom-toggle-group custom-toggle-group--gap"
@@ -247,6 +245,9 @@
                         @if (hasRequiredValidation('treatingDoctor.doctorCity')) {
                           <mat-error>ORT ist erforderlich</mat-error>
                         }
+                        @if (mainForm.get('medicalTreatments.treatingDoctor.doctorCity')?.hasError('pattern')) {
+                          <mat-error>Nur text erlaubt</mat-error>
+                        }
                       </mat-form-field>
                     </div>
                   </div>
@@ -290,7 +291,7 @@
               <mat-form-field>
                 <input type="text" formControlName="reason" matInput placeholder="Hier eingeben..." />
                 @if (hasRequiredValidation('rejectedByInsurance.reason')) {
-                  <mat-error>Enter reason!</mat-error>
+                  <mat-error>Enter reason,only text allowed!</mat-error>
                 }
               </mat-form-field>
             }
@@ -393,7 +394,7 @@
                         <mat-error>Enter disability!</mat-error>
                       }
                     </mat-form-field>
-                    <p>Bitte lade deine IV-Verfügung hoch:</p>
+                      <p>Bitte lade deine IV-Verfügung hoch:</p>
                     <div class="upload-box" (click)="fileInput.click()">
                       @if (imagePreview[i]; as f) {
                         <div class="file-preview">
@@ -554,10 +555,11 @@
                         </mat-form-field>
                         <p>Wie oft?</p>
                         <mat-form-field>
-                          <input type="text" formControlName="howOften" matInput placeholder="Hier eingeben..." value="howOften">
-                          @if (hasRequiredValidation('drugs.ifTakingDrugs.howOften')) {
-                            <mat-error>How Often?</mat-error>
-                          }
+                          <mat-select formControlName="howOften" placeholder="Hier eingeben...">
+                            @for (option of drugOptions; track option.value) {
+                              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                            }
+                          </mat-select>
                         </mat-form-field>
                         <div class="form-row">
                           <div>
@@ -816,7 +818,7 @@
               <mat-form-field>
                 <input type="text" formControlName="whenIsTreatmentPlanned" matInput placeholder="Hier eingeben..." />
                 @if (hasRequiredValidation('treatmentPlanned.whenIsTreatmentPlanned')) {
-                  <mat-error>Treatment Planned ist erforderlich</mat-error>
+                  <mat-error>Behandlung Geplant ist erforderlich und nur Text</mat-error>
                 }
               </mat-form-field>
             }

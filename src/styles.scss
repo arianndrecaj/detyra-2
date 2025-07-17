@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+@import './assets/styles/breakpoints';
 
 html, body { height: max-content; display: flex; justify-content: center; align-items: flex-start; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: whitesmoke; }
 
 h1{
   font-family: 'Roboto', sans-serif;
@@ -31,6 +32,12 @@ p{
   font-size: 12pt;
   color: #706C73;
   margin-top: 0;
+  img{
+    vertical-align: text-top;
+  }
+  &.black {
+    color: #000000;
+  }
 }
 
 p.special-paragraph {

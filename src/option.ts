@@ -88,3 +88,15 @@ export const TEETH6_OPTIONS: Option[] = [
   { value : '75', label: 75},
 ]
 
+export const DRUGS_HOW_OFTEN_OPTIONS: Option[] = [
+  { value : 'rarely', label: 'Rarely'},
+  { value : 'sometimes', label: 'Sometimes'},
+  { value : 'often', label: 'Often'},
+  { value : 'usually', label: 'Usually'},
+  { value : 'always', label: 'Always'},
+  { value : 'daily', label: 'Daily'},
+  { value : 'weekly', label: 'Weekly'},
+  { value : 'monthly', label: 'Monthly'},
+  { value : 'yearly', label: 'Yearly'},
+]
+

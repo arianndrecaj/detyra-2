@@ -8,7 +8,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 531px;
+  min-width: 560px;
+  //max-width: 531px;
   background: white;
   border-radius: 10px;
   @include mobile-view{
@@ -29,6 +30,7 @@
     border-radius: 12px;
     //padding: 16px;
     width: 100%;
+    max-width: 531px;
     @include mobile-view{
       width: 100%;
     }
@@ -159,11 +161,11 @@
       }
         button{
           border-radius: 0;
+          width: 100px;
         }
     }
   }
 }
-
 
 .upload-box {
   border: 2px dashed #28a745;
@@ -176,7 +178,7 @@
   transition: border-color 0.3s;
   margin-bottom: 16px;
   @include mobile-view{
-    width: 100%;
+    width: auto;
   }
   .file-preview,
   .file-placeholder {
@@ -241,8 +243,8 @@
   &::before {
     content: "";
     position: absolute;
-    top: 450px;
-    height: 20%;
+    top: 438px;
+    height: 21%;
     bottom: 0;
     left: 50%;
     width: 1px;
@@ -276,4 +278,5 @@
     display: flex;
   }
 }
+
 

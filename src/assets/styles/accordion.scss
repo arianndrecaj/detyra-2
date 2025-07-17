@@ -12,12 +12,16 @@ mat-expansion-panel-header{
 
 ::ng-deep.mat-expansion-panel-body{
   padding: 0 22px 0 !important;
+  @include mobile-view{
+    width: auto;
+  }
 }
 
 mat-expansion-panel,
 mat-expansion-panel-header,
 .mat-expansion-panel-content {
   background: #28A54A0F !important;
+  width: auto;
 }
 
 .mat-focus-indicator{
@@ -26,6 +30,7 @@ mat-expansion-panel-header,
 
 .mat-expansion-panel:not([class*=mat-elevation-z]) {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  margin-bottom: 20px;
   @include mobile-view{
     width: 100%;
   }
@@ -37,6 +42,10 @@ mat-expansion-panel-header,
 
 .mat-expansion-panel-header.mat-expanded {
   height: auto !important;
+  width: auto;
+    @include mobile-view{
+      width: auto;
+    }
 }
 
 
