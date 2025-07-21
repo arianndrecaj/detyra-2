@@ -1,5 +1,5 @@
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, setTestabilityGetter} from '@angular/core';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 import {MatError, MatFormField, MatInput, MatInputModule} from '@angular/material/input';
 import {MatSelect} from '@angular/material/select';
@@ -367,4 +367,5 @@ export class TestComponent implements OnInit{
     }
   }
 
+  protected readonly setTestabilityGetter = setTestabilityGetter;
 }
