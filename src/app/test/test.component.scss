@@ -9,11 +9,12 @@
   flex-direction: column;
   align-items: center;
   min-width: 560px;
-  //max-width: 531px;
   background: white;
   border-radius: 10px;
-  @include mobile-view{
-    width: 100%;
+  @include mobile-view {
+    min-width: 0;
+    padding: 8px;
+    box-sizing: border-box;
   }
   .header {
     display: flex;
@@ -22,33 +23,36 @@
     align-items: center;
     margin-bottom: 20px;
     margin-top: 20px;
-    @include mobile-view{
-      width: 100%;
+    @include mobile-view {
+      max-width: 100%;
+      gap: 10px;
+      justify-content: space-between;
+      padding: 0 8px;
     }
   }
-  .forma{
+  .forma {
     border-radius: 12px;
-    //padding: 16px;
     width: 100%;
     max-width: 531px;
-    @include mobile-view{
-      width: 100%;
+    @include mobile-view {
+      max-width: 100%;
+      padding: 0 8px;
     }
     div {
-      span{
+      span {
         margin-right: 10px;
       }
-      //margin-bottom: 24px;
     }
-    ::ng-deep.mat-mdc-text-field-wrapper{
+    ::ng-deep .mat-mdc-text-field-wrapper {
       height: 53px;
       border-radius: 11px;
       width: 100%;
       background-color: #28A54A1A;
       border: 1px solid transparent;
       transition: none;
-      @include mobile-view{
+      @include mobile-view {
         width: 100%;
+        box-sizing: border-box;
       }
       &:has(input:focus, input:not(:placeholder-shown)) {
         border: 1px solid #28A54A;
@@ -60,23 +64,25 @@
       border: 1px solid #28A54A;
     }
 
-
     .form-row {
       display: flex;
       gap: 8px;
       margin-bottom: 0;
-      span{
+      span {
         margin-right: 12px;
       }
-      @include mobile-view{
+      @include mobile-view {
+        flex-direction: column; /* Stack vertically */
         width: 100%;
+        gap: 4px; /* Reduce gap */
       }
       div {
         display: flex;
         flex-direction: column;
         flex: 1;
-        @include mobile-view{
+        @include mobile-view {
           width: 100%;
+          min-width: 0; /* Prevent overflow */
         }
       }
     }
@@ -85,8 +91,9 @@
       display: flex;
       flex-direction: column;
       flex: 1;
-      @include mobile-view{
+      @include mobile-view {
         width: 100%;
+        min-width: 0;
       }
     }
 
@@ -94,26 +101,31 @@
       display: flex;
       flex-direction: column;
       gap: 0;
-      @include mobile-view{
+      @include mobile-view {
         width: 100%;
+        gap: 4px; /* Reduce gap */
       }
       &-checkbox {
         p {
           margin-top: 10px;
           margin-bottom: 0;
         }
-
         margin-bottom: 0;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        @include mobile-view {
+          flex-wrap: wrap; /* Allow wrapping if needed */
+          gap: 4px;
+        }
       }
 
       .pair {
         display: flex;
         gap: 8px;
         margin-bottom: 0;
-        @include mobile-view{
+        @include mobile-view {
+          flex-direction: column; /* Stack vertically */
           width: 100%;
         }
       }
@@ -122,33 +134,36 @@
       .pair-70-30 mat-form-field:first-child,
       .pair-30-70 mat-form-field:last-child {
         flex: 1;
-        @include mobile-view{
+        @include mobile-view {
           width: 100%;
+          min-width: 0;
         }
       }
 
       .pair-70-30 mat-form-field:first-child,
       .pair-30-70 mat-form-field:last-child {
         flex: 7;
-        @include mobile-view{
+        @include mobile-view {
           width: 100%;
+          min-width: 0;
         }
       }
 
       .pair-70-30 mat-form-field:last-child,
       .pair-30-70 mat-form-field:first-child {
         flex: 3;
-        @include mobile-view{
+        @include mobile-view {
           width: 100%;
+          min-width: 0;
         }
       }
     }
 
-    ::ng-deep.mdc-line-ripple{
+    ::ng-deep .mdc-line-ripple {
       display: none !important;
     }
 
-    .navigation-buttons{
+    .navigation-buttons {
       display: flex;
       flex-direction: row;
       gap: 20px;
@@ -156,13 +171,21 @@
       justify-content: center;
       margin-top: 10px;
       margin-bottom: 10px;
-      @include mobile-view{
+      @include mobile-view {
+        flex-wrap: wrap; /* Allow buttons to wrap */
+        gap: 8px;
         width: 100%;
+        padding: 0 8px;
       }
-        button{
-          border-radius: 0;
-          width: 100px;
+      button {
+        border-radius: 0;
+        width: 100px;
+        @include mobile-view {
+          flex: 1 1 45%; /* Flexible width, wraps to two columns */
+          max-width: 140px; /* Cap width to prevent stretching */
+          min-width: 80px; /* Ensure usability */
         }
+      }
     }
   }
 }
@@ -177,8 +200,10 @@
   cursor: pointer;
   transition: border-color 0.3s;
   margin-bottom: 16px;
-  @include mobile-view{
-    width: auto;
+  @include mobile-view {
+    width: 100%;
+    padding: 12px; /* Reduce padding */
+    box-sizing: border-box;
   }
   .file-preview,
   .file-placeholder {
@@ -188,23 +213,27 @@
     gap: 10px;
     color: #28a745;
     font-weight: bold;
-    @include mobile-view{
-      width: 100%;
+    @include mobile-view {
+      flex-wrap: wrap; /* Prevent overflow */
+      font-size: 14px; /* Smaller text */
     }
   }
   i {
     font-size: 20px;
+    @include mobile-view {
+      font-size: 16px;
+    }
   }
 }
 
-.mat-datepicker-toggle{
+.mat-datepicker-toggle {
   z-index: 10 !important;
-  @include mobile-view{
-    width: 100%;
+  @include mobile-view {
+    width: auto; /* Prevent over-stretching */
   }
 }
 
-.dental-part{
+.dental-part {
   display: flex;
   width: 104pt;
   height: 26pt;
@@ -219,26 +248,32 @@
   font-size: 14pt;
   margin-top: 20px;
   margin-bottom: 20px;
-  @include mobile-view{
-    width: auto;
+  @include mobile-view {
+    width: 100%;
+    font-size: 12pt; /* Smaller font */
+    height: 22pt; /* Smaller height */
+    margin-left: 0; /* Center button */
+    padding: 0 8px;
   }
 }
 
-.teeth-wrapper{
+.teeth-wrapper {
   margin-bottom: 50px;
-
   .top-numbers,
-  .bottom-numbers{
+  .bottom-numbers {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    p{
+    p {
       margin-bottom: 0;
+      @include mobile-view {
+        font-size: 10px; /* Smaller font to prevent overlap */
+      }
     }
   }
 }
 
-.teeth-wrapper-with-line{
+.teeth-wrapper-with-line {
   margin-bottom: 50px;
   &::before {
     content: "";
@@ -253,30 +288,37 @@
     background-repeat: repeat-y;
     transform: translateX(-50%);
     z-index: 1;
+    @include mobile-view {
+      top: 50%; /* Dynamic positioning */
+      height: 40%; /* Adjust height for mobile */
+    }
   }
-
   .top-numbers,
-  .bottom-numbers{
+  .bottom-numbers {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    p{
+    p {
       margin-bottom: 0;
+      @include mobile-view {
+        font-size: 10px;
+      }
     }
   }
 }
 
-.entfernen{
+.entfernen {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  p{
+  p {
     margin-bottom: 0;
     align-items: center;
     color: red;
     cursor: pointer;
     display: flex;
+    @include mobile-view {
+      font-size: 12px; /* Smaller font */
+    }
   }
 }
-
-
