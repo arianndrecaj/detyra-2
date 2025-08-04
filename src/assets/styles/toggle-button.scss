@@ -1,3 +1,5 @@
+@import '../../assets/styles/breakpoints';
+
 .custom-toggle-group {
   display: flex;
   background: #d1fae5;
@@ -6,7 +8,9 @@
   margin-top: 12px;
   border: 1px solid transparent;
   transition: none;
-
+  @include mobile-view{
+    width: 100%;
+  }
   &:has(.mat-button-toggle-checked) {
     border: 1px solid #28A54A;
   }
@@ -57,10 +61,13 @@
   ::ng-deep .mat-button-toggle-checked .mat-button-toggle-button:has(.mat-button-toggle-checkbox-wrapper){
     padding: 0;
   }
-
 }
 ::ng-deep.mat-button-toggle-standalone:not([class*=mat-elevation-z]), .mat-button-toggle-group:not([class*=mat-elevation-z]){
   box-shadow: none;
+  @include mobile-view{
+    max-width: 100%;
+    min-width: 0;
+  }
 }
 
 .weiter-button{
@@ -71,6 +78,9 @@
   margin-bottom: 10px;
   border: none;
   cursor: pointer;
+  @include mobile-view{
+    width: 100%;
+  }
   &--remove {
     background-color: red;
   }

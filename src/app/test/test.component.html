@@ -35,7 +35,7 @@
             </mat-expansion-panel-header>
             <div formGroupName="personalInfo" [class.disabled]="!isQuestionComplete('everBeenInsuredWithHelsana')">
               <div>
-                <mat-form-field>
+                <mat-form-field [class.has-error]="hasRequiredValidation('personalInfo.occupation')">
                   <mat-select formControlName="occupation" placeholder="Aktueller Beruf">
                     @for (option of occupationOptions; track option.value) {
                       <mat-option [value]="option.value">{{ option.label }}</mat-option>
@@ -46,14 +46,14 @@
                   }
                 </mat-form-field>
                 <div class="form-row">
-                  <mat-form-field [class.filled]="mainForm.get('personalInfo.grosse')?.value">
+                  <mat-form-field [class.has-error]="hasRequiredValidation('personalInfo.grosse')">
                     <input type="number" formControlName="grosse" matInput placeholder="Grösse (cm)" value="grosse">
                     <span matSuffix>cm</span>
                     @if (hasRequiredValidation('personalInfo.grosse')) {
                       <mat-error>Enter gross!</mat-error>
                     }
                   </mat-form-field>
-                  <mat-form-field>
+                  <mat-form-field [class.has-error]="hasRequiredValidation('personalInfo.gewicht')">
                     <input type="number" formControlName="gewicht" matInput placeholder="Gewicht"/>
                     <span matSuffix>kg</span>
                     @if (hasRequiredValidation('personalInfo.gewicht')) {
@@ -61,7 +61,7 @@
                     }
                   </mat-form-field>
                 </div>
-                <mat-form-field>
+                <mat-form-field [class.has-error]="hasRequiredValidation('personalInfo.bmi')">
                   <input type="number" formControlName="bmi" matInput placeholder="BMI" value="bmi">
                   <span matSuffix>BMI</span>
                   @if (hasRequiredValidation('personalInfo.bmi')) {
@@ -90,33 +90,27 @@
               <div>
                 <div class="form-pairs">
                   <div class="pair pair-50-50">
-                    <mat-form-field>
+                    <mat-form-field [class.has-error]="hasRequiredValidation('doctorInfo.vorname')">
                       <input type="text" formControlName="vorname" matInput placeholder="Vorname" />
                       @if (hasRequiredValidation('doctorInfo.vorname')) {
-                        <mat-error>Vorname ist erforderlich</mat-error>
-                      }
-                      @if (mainForm.get('doctorInfo.vorname')?.hasError('pattern')) {
-                        <mat-error>Nur text erlaubt</mat-error>
+                        <mat-error>Vorname ist erforderlich,nur Text!</mat-error>
                       }
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field [class.has-error]="hasRequiredValidation('doctorInfo.nachname')">
                       <input type="text" formControlName="nachname" matInput placeholder="Nachname" />
                       @if (hasRequiredValidation('doctorInfo.nachname')) {
-                        <mat-error>Nachname ist erforderlich</mat-error>
-                      }
-                      @if (mainForm.get('doctorInfo.nachname')?.hasError('pattern')) {
-                        <mat-error>Nur text erlaubt</mat-error>
+                        <mat-error>Nachname ist erforderlich,nur Text!</mat-error>
                       }
                     </mat-form-field>
                   </div>
                   <div class="pair pair-70-30">
-                    <mat-form-field>
+                    <mat-form-field [class.has-error]="hasRequiredValidation('doctorInfo.strasse')">
                       <input type="text" formControlName="strasse" matInput placeholder="Strasse" />
                       @if (hasRequiredValidation('doctorInfo.strasse')) {
                         <mat-error>Strasse ist erforderlich</mat-error>
                       }
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field [class.has-error]="hasRequiredValidation('doctorInfo.nr')">
                       <input type="number" formControlName="nr" matInput placeholder="Nr" />
                       @if (hasRequiredValidation('doctorInfo.nr')) {
                         <mat-error>Nr ist erforderlich</mat-error>
@@ -124,13 +118,13 @@
                     </mat-form-field>
                   </div>
                   <div class="pair pair-30-70">
-                    <mat-form-field>
+                    <mat-form-field [class.has-error]="hasRequiredValidation('doctorInfo.plz')">
                       <input type="number" formControlName="plz" matInput placeholder="PLZ" />
                       @if (hasRequiredValidation('doctorInfo.plz')) {
                         <mat-error>PLZ ist erforderlich</mat-error>
                       }
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field [class.has-error]="hasRequiredValidation('doctorInfo.ort')">
                       <input type="text" formControlName="ort" matInput placeholder="Ort" />
                       @if (hasRequiredValidation('doctorInfo.ort')) {
                         <mat-error>ORT ist erforderlich</mat-error>
@@ -159,7 +153,7 @@
             [disabled]="!isQuestionComplete('doctorInfo')"
             [expanded]="currentStep === 3">
             <mat-expansion-panel-header>
-              <h2>4. Medizinische Behandlungen und Abklärungen</h2>
+              <h2>4.Medizinische Behandlungen und Abklärungen</h2>
             </mat-expansion-panel-header>
             <div formGroupName="medicalTreatments" [class.disabled]="!isQuestionComplete('doctorInfo')">
               <p [class.disabled-label]="!isQuestionComplete('doctorInfo')">
@@ -182,10 +176,10 @@
                         <p (click)="removeFromFormArray('medicalTreatments.choiceIfYes', i)">-Entfernene</p>
                       </div>
                       <p>Art der Krankheit / Störung (Diagnose), der Beschwerden oder Ergebnis / Grund der Behandlung/Untersuchung/Kontrolle?</p>
-                      <mat-form-field>
-                        <input type="text" formControlName="illness" matInput placeholder="Hier eingeben..." value="illness">
-                        @if (hasRequiredValidation('medicalTreatments.choiceIfYes.illness')) {
-                          <mat-error>Enter illness!</mat-error>
+                      <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.' + i + '.illness')">
+                        <input type="text" formControlName="illness" matInput placeholder="Hier eingeben...">
+                        @if (hasRequiredValidation('medicalTreatments.choiceIfYes.' + i + '.illness')) {
+                          <mat-error>Krankheit eingeben,nur Text!</mat-error>
                         }
                       </mat-form-field>
                       <p>Folgenlos geheilt</p>
@@ -197,55 +191,55 @@
                         <mat-button-toggle value="2">Ja</mat-button-toggle>
                       </mat-button-toggle-group>
                       <p>Datum der letzten/ geplanten Behandlung</p>
-                      <mat-form-field>
+                      <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.' + i + '.date')">
                         <input matInput [matDatepicker]="picker" placeholder="Von" formControlName="date">
                         <mat-icon matSuffix (click)="picker.open()">calendar_month</mat-icon>
                         <mat-datepicker #picker></mat-datepicker>
+                        @if (hasRequiredValidation('medicalTreatments.choiceIfYes.' + i + '.date')) {
+                          <mat-error>Datum eingeben!</mat-error>
+                        }
                       </mat-form-field>
                       <p>Behandelnder Arzt, Zahnarzt, Naturarzt, Therapeut, Spital</p>
                       <div class="form-pairs">
                         <div class="pair pair-50-50">
-                          <mat-form-field>
+                          <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.' + i + '.doctorName')">
                             <input type="text" formControlName="doctorName" matInput placeholder="Vorname" />
-                            @if (hasRequiredValidation('medicalTreatments.choiceIfYes.treatingDoctor.doctorName')) {
-                              <mat-error>Enter name!</mat-error>
+                            @if (hasRequiredValidation('medicalTreatments.choiceIfYes.' + i + '.doctorName')) {
+                              <mat-error>Vorname ist erforderlich,nur Text!</mat-error>
                             }
                           </mat-form-field>
-                          <mat-form-field>
+                          <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.' + i +'.doctorSpeciality')">
                             <input type="text" formControlName="doctorSpeciality" matInput placeholder="Nachname" />
-                            @if (hasRequiredValidation('doctorInfo.treatingDoctor.doctorSpeciality')) {
-                              <mat-error>DoctorSpeciality ist erforderlich</mat-error>
+                            @if (hasRequiredValidation('medicalTreatments.choiceIfYes.' + i +'.doctorSpeciality')) {
+                              <mat-error>Speciality ist erforderlich,nur Text!</mat-error>
                             }
                           </mat-form-field>
                         </div>
                         <div class="pair pair-70-30">
-                          <mat-form-field>
+                          <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.' + i +'.doctorStreet')">
                             <input type="text" formControlName="doctorStreet" matInput placeholder="Strasse" />
-                            @if (hasRequiredValidation('treatingDoctor.doctorStreet')) {
+                            @if (hasRequiredValidation('medicalTreatments.choiceIfYes.' + i +'.doctorStreet')) {
                               <mat-error>Strasse ist erforderlich</mat-error>
                             }
                           </mat-form-field>
-                          <mat-form-field>
+                          <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.' + i +'.doctorNumber')">
                             <input type="number" formControlName="doctorNumber" matInput placeholder="Nr" />
-                            @if (hasRequiredValidation('treatingDoctor.doctorNumber')) {
+                            @if (hasRequiredValidation('medicalTreatments.choiceIfYes.' + i +'.doctorNumber')) {
                               <mat-error>Nr ist erforderlich</mat-error>
                             }
                           </mat-form-field>
                         </div>
                         <div class="pair pair-30-70">
-                          <mat-form-field>
+                          <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.'+ i +'.doctorZipCode')">
                             <input type="number" formControlName="doctorZipCode" matInput placeholder="ZIP" />
-                            @if (hasRequiredValidation('treatingDoctor.doctorZipCode')) {
+                            @if (hasRequiredValidation('medicalTreatments.choiceIfYes.'+ i +'.doctorZipCode')) {
                               <mat-error>PLZ ist erforderlich</mat-error>
                             }
                           </mat-form-field>
-                          <mat-form-field>
+                          <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.'+ i +'.doctorCity')">
                             <input type="text" formControlName="doctorCity" matInput placeholder="City" />
-                            @if (hasRequiredValidation('treatingDoctor.doctorCity')) {
-                              <mat-error>ORT ist erforderlich</mat-error>
-                            }
-                            @if (mainForm.get('medicalTreatments.treatingDoctor.doctorCity')?.hasError('pattern')) {
-                              <mat-error>Nur text erlaubt</mat-error>
+                            @if (hasRequiredValidation('medicalTreatments.choiceIfYes.'+ i +'.doctorCity')) {
+                              <mat-error>Stadt ist erforderlich und nur Text</mat-error>
                             }
                           </mat-form-field>
                         </div>
@@ -288,10 +282,10 @@
               </mat-button-toggle-group>
               @if (mainForm.get('rejectedByInsurance.choice')?.value === 'Ja') {
                 <p>Ja, warum?</p>
-                <mat-form-field>
+                <mat-form-field [class.has-error]="hasRequiredValidation('rejectedByInsurance.reason')">
                   <input type="text" formControlName="reason" matInput placeholder="Hier eingeben..." />
                   @if (hasRequiredValidation('rejectedByInsurance.reason')) {
-                    <mat-error>Enter reason, only text allowed!</mat-error>
+                    <mat-error>Grund eingeben, nur Text erlaubt!</mat-error>
                   }
                 </mat-form-field>
               }
@@ -386,10 +380,10 @@
                         <h3>{{i + 1}}) Angabe</h3>
                         <p (click)="removeFromFormArray('disability.ifDisabilityYes', i)">-Entfernene</p>
                       </div>
-                      <mat-form-field>
+                      <mat-form-field [class.has-error]="hasRequiredValidation('disability.ifDisabilityYes.' + i +'.typeOfDisability')">
                         <input type="text" formControlName="typeOfDisability" matInput placeholder="Art der Invalidität / des Geburtsgebrechens?" value="typeOfDisability">
-                        @if (hasRequiredValidation('disability.ifDisabilityYes.typeOfDisability')) {
-                          <mat-error>Enter disability!</mat-error>
+                        @if (hasRequiredValidation('disability.ifDisabilityYes.' + i +'.typeOfDisability')) {
+                          <mat-error>Behinderung eingeben!</mat-error>
                         }
                       </mat-form-field>
                       <p>Bitte lade deine IV-Verfügung hoch:</p>
@@ -460,26 +454,32 @@
                         <h3>{{i + 1}}) Medikament</h3>
                         <p (click)="removeFromFormArray('medications.ifTakingMeds', i)">-Entfernene</p>
                       </div>
-                      <mat-form-field>
+                      <mat-form-field [class.has-error]="hasRequiredValidation('medications.ifTakingMeds.'+ i +'.typeOfMed')">
                         <input type="text" formControlName="typeOfMed" matInput placeholder="Hier eingeben..." value="typeOfMed">
-                        @if (hasRequiredValidation('medications.ifTakingMeds.typeOfMed')) {
-                          <mat-error>Enter med!</mat-error>
+                        @if (hasRequiredValidation('medications.ifTakingMeds.'+ i +'.typeOfMed')) {
+                          <mat-error>Eingabe med!</mat-error>
                         }
                       </mat-form-field>
                       <p>Bitte lade deine IV-Verfügung hoch:</p>
                       <div class="form-row">
-                        <mat-form-field>
+                        <mat-form-field [class.has-error]="hasRequiredValidation('medications.ifTakingMeds.'+ i +'.startDate')">
                           <input matInput [matDatepicker]="startPicker" placeholder="Von" formControlName="startDate">
                           <mat-icon matSuffix (click)="startPicker.open()">calendar_month</mat-icon>
                           <mat-datepicker #startPicker></mat-datepicker>
+                          @if (hasRequiredValidation('medications.ifTakingMeds.'+ i +'.startDate')) {
+                            <mat-error>Datum auswählen!</mat-error>
+                          }
                         </mat-form-field>
-                        <mat-form-field>
-                          <input matInput [matDatepicker]="endPicker"
+                        <mat-form-field [class.has-error]="hasRequiredValidation('medications.ifTakingMeds.'+ i +'.endDates')">
+                        <input matInput [matDatepicker]="endPicker"
                                  [min]="medGroup.get('startDate')?.value"
                                  formControlName="endDate"
                                  placeholder="Bis">
                           <mat-icon matSuffix (click)="endPicker.open()">calendar_month</mat-icon>
                           <mat-datepicker #endPicker></mat-datepicker>
+                          @if (hasRequiredValidation('medications.ifTakingMeds.'+ i +'.endDate')) {
+                            <mat-error>Datum auswählen!</mat-error>
+                          }
                         </mat-form-field>
                       </div>
                       <div class="form-pairs-checkbox">
@@ -542,38 +542,47 @@
                           <p (click)="removeFromFormArray('drugs.ifTakingDrugs', i)">-Entfernene</p>
                         </div>
                         <p>Ja, welche?</p>
-                        <mat-form-field>
+                        <mat-form-field [class.has-error]="hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.whichOne')">
                           <input type="text" formControlName="whichOne" matInput placeholder="Hier eingeben..." value="whichOne">
-                          @if (hasRequiredValidation('drugs.ifTakingDrugs.whichOne')) {
-                            <mat-error>Enter Drug!</mat-error>
+                          @if (hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.whichOne')) {
+                            <mat-error>Droge eingeben!</mat-error>
                           }
                         </mat-form-field>
                         <p>Wie oft?</p>
-                        <mat-form-field>
+                        <mat-form-field [class.has-error]="hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.howOften')">
                           <mat-select formControlName="howOften" placeholder="Hier eingeben...">
                             @for (option of drugOptions; track option.value) {
                               <mat-option [value]="option.value">{{ option.label }}</mat-option>
                             }
                           </mat-select>
+                          @if (hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.howOften')) {
+                            <mat-error>Wählen Sie eine!</mat-error>
+                          }
                         </mat-form-field>
                         <div class="form-row">
                           <div>
                             <p>Von</p>
-                            <mat-form-field>
+                            <mat-form-field [class.has-error]="hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.startDate')">
                               <input matInput [matDatepicker]="startPicker" placeholder="Von" formControlName="startDate">
                               <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
                               <mat-datepicker #startPicker></mat-datepicker>
+                              @if (hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.startDate')) {
+                                <mat-error>Startdatum eingeben!</mat-error>
+                              }
                             </mat-form-field>
                           </div>
                           <div>
                             <p>Bis</p>
-                            <mat-form-field>
+                            <mat-form-field [class.has-error]="hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.endDate')">
                               <input matInput [matDatepicker]="endPicker"
                                      [min]="drugsGroup.get('startDate')?.value"
                                      formControlName="endDate"
                                      placeholder="Bis">
                               <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
                               <mat-datepicker #endPicker></mat-datepicker>
+                              @if (hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.endDate')) {
+                                <mat-error>Enddatum eingeben!</mat-error>
+                              }
                             </mat-form-field>
                           </div>
                         </div>
@@ -638,10 +647,13 @@
               </mat-button-toggle-group>
               @if (mainForm.get('furtherQuestions.choice')?.value === 'Ja') {
                 <p>Voraussichtlicher Geburtstermin</p>
-                <mat-form-field>
+                <mat-form-field [class.has-error]="hasRequiredValidation('furtherQuestions.pregnancyExpected')">
                   <input matInput [matDatepicker]="startPicker" placeholder="Von" formControlName="pregnancyExpected">
                   <mat-icon matSuffix (click)="startPicker.open()">calendar_month</mat-icon>
                   <mat-datepicker #startPicker></mat-datepicker>
+                  @if (hasRequiredValidation('furtherQuestions.pregnancyExpected')) {
+                    <mat-error>Datum auswählen!</mat-error>
+                  }
                 </mat-form-field>
               }
               <div class="navigation-buttons">
@@ -702,10 +714,13 @@
               <h2>12. Wann fand der letzte zahnärztliche Kontrolluntersuch statt? (dieser darf nicht länger als 1 Jahr zurückliegen)</h2>
             </mat-expansion-panel-header>
             <div formGroupName="dentalCheckUp" [class.disabled]="!isQuestionComplete('medicalReport')">
-              <mat-form-field>
+              <mat-form-field [class.has-error]="hasRequiredValidation('dentalCheckUp.checkUpDate')">
                 <input matInput [min]="minDate" [matDatepicker]="startPicker" placeholder="Von" formControlName="checkUpDate">
                 <mat-icon matSuffix (click)="startPicker.open()">calendar_month</mat-icon>
                 <mat-datepicker #startPicker></mat-datepicker>
+                @if (hasRequiredValidation('dentalCheckUp.checkUpDate')) {
+                  <mat-error>Datum auswählen!</mat-error>
+                }
               </mat-form-field>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
@@ -733,10 +748,10 @@
               </mat-button-toggle-group>
               @if (mainForm.get('teethDisease.choice')?.value === 'Ja') {
                 <p>Ja, welche?</p>
-                <mat-form-field>
+                <mat-form-field [class.has-error]="hasRequiredValidation('teethDisease.whichOne')">
                   <input type="text" formControlName="whichOne" matInput placeholder="Hier eingeben..." value="whichOne">
                   @if (hasRequiredValidation('teethDisease.whichOne')) {
-                    <mat-error>Enter Disease!</mat-error>
+                    <mat-error>Krankheit eingeben,nur Text!</mat-error>
                   }
                 </mat-form-field>
               }
@@ -766,14 +781,14 @@
               </mat-button-toggle-group>
               @if (mainForm.get('upToDateCheckUp.choice')?.value === 'Ja') {
                 <p>Ja, welche?</p>
-                <mat-form-field>
+                <mat-form-field [class.has-error]="hasRequiredValidation('upToDateCheckUp.whatIntervals')">
                   <mat-select formControlName="whatIntervals" placeholder="Aktueller Beruf">
                     @for (option of intervalOptions; track option.value) {
                       <mat-option [value]="option.value">{{ option.label }}</mat-option>
                     }
                   </mat-select>
                   @if (hasRequiredValidation('upToDateCheckUp.whatIntervals')) {
-                    <mat-error>Select one!</mat-error>
+                    <mat-error>Wählen Sie eine!</mat-error>
                   }
                 </mat-form-field>
               }
@@ -803,7 +818,7 @@
               </mat-button-toggle-group>
               @if (mainForm.get('treatmentPlanned.choice')?.value === 'Ja') {
                 <p>Ja, welche und wann ist diese geplant?</p>
-                <mat-form-field>
+                <mat-form-field [class.has-error]="hasRequiredValidation('treatmentPlanned.whenIsTreatmentPlanned')">
                   <input type="text" formControlName="whenIsTreatmentPlanned" matInput placeholder="Hier eingeben..." />
                   @if (hasRequiredValidation('treatmentPlanned.whenIsTreatmentPlanned')) {
                     <mat-error>Behandlung Geplant ist erforderlich und nur Text</mat-error>
@@ -836,10 +851,10 @@
               </mat-button-toggle-group>
               @if (mainForm.get('abrasionsOrErosions.choice')?.value === 'Ja') {
                 <p>Ja, weshalb?</p>
-                <mat-form-field>
+                <mat-form-field [class.has-error]="hasRequiredValidation('abrasionsOrErosions.whichOne')">
                   <input type="text" formControlName="whichOne" matInput placeholder="Hier eingeben..." />
                   @if (hasRequiredValidation('abrasionsOrErosions.whichOne')) {
-                    <mat-error>Abrasions or Erosions ist erforderlich</mat-error>
+                    <mat-error>Abrasions or Erosions ist erforderlich,nur Text!</mat-error>
                   }
                 </mat-form-field>
               }
@@ -869,10 +884,10 @@
               </mat-button-toggle-group>
               @if (mainForm.get('misalignmentTeethOrJaw.choice')?.value === 'Ja') {
                 <p>Ja, welche Art der Fehlstellung?</p>
-                <mat-form-field>
+                <mat-form-field [class.has-error]="hasRequiredValidation('misalignmentTeethOrJaw.whatTypeOfMisalignment')">
                   <input type="text" formControlName="whatTypeOfMisalignment" matInput placeholder="Hier eingeben..." />
                   @if (hasRequiredValidation('misalignmentTeethOrJaw.whatTypeOfMisalignment')) {
-                    <mat-error>Type of misalignment ist erforderlich</mat-error>
+                    <mat-error>Art des Versatzes ist erforderlich</mat-error>
                   }
                 </mat-form-field>
               }
@@ -1440,9 +1455,9 @@
                   </div>
                 </div>
               }
+              <button class="finish-button" [disabled]="!isQuestionComplete('accidentDamagedTeeth')" (click)="goToNextStep()">Fertig</button>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('accidentDamagedTeeth')">Finished</button>
               </div>
             </div>
           </mat-expansion-panel>

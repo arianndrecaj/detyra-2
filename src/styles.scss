@@ -9,6 +9,10 @@ h1{
   font-weight: 400;
   font-size: 24pt;
   margin: 0;
+  @include mobile-view{
+    font-size: 20pt;
+    height: 100%;
+  }
 }
 
 h2{
@@ -17,6 +21,8 @@ h2{
   font-size: 14pt;
   color: #000000;
   margin: 0;
+  @include mobile-view{
+  }
 }
 
 h3{
@@ -24,6 +30,9 @@ h3{
   font-weight: 500;
   font-size: 13pt;
   color: #000000;
+  @include mobile-view{
+    width: 100%;
+  }
 }
 
 p{
@@ -32,6 +41,11 @@ p{
   font-size: 12pt;
   color: #706C73;
   margin-top: 0;
+  margin-bottom: 8px;
+  @include mobile-view{
+    max-width: 100%;
+    line-break: anywhere;
+  }
   img{
     vertical-align: text-top;
   }
@@ -70,3 +84,4 @@ img{
   pointer-events: none;
   user-select: none;
 }
+

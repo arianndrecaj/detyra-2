@@ -36,7 +36,7 @@
     max-width: 531px;
     @include mobile-view {
       max-width: 100%;
-      padding: 0 8px;
+      padding: 0;
     }
     div {
       span {
@@ -59,9 +59,8 @@
       }
     }
 
-    ::ng-deep mat-form-field.mat-form-field-should-float .mat-mdc-text-field-wrapper,
-    ::ng-deep mat-form-field.mat-focused .mat-mdc-text-field-wrapper {
-      border: 1px solid #28A54A;
+    ::ng-deep .has-error .mat-mdc-text-field-wrapper {
+      border: 1px solid red !important;
     }
 
     .form-row {
@@ -72,9 +71,9 @@
         margin-right: 12px;
       }
       @include mobile-view {
-        flex-direction: column; /* Stack vertically */
+        flex-direction: column;
         width: 100%;
-        gap: 4px; /* Reduce gap */
+        gap: 4px;
       }
       div {
         display: flex;
@@ -82,7 +81,7 @@
         flex: 1;
         @include mobile-view {
           width: 100%;
-          min-width: 0; /* Prevent overflow */
+          min-width: 0;
         }
       }
     }
@@ -103,7 +102,7 @@
       gap: 0;
       @include mobile-view {
         width: 100%;
-        gap: 4px; /* Reduce gap */
+        gap: 4px;
       }
       &-checkbox {
         p {
@@ -115,7 +114,7 @@
         flex-direction: row;
         justify-content: space-between;
         @include mobile-view {
-          flex-wrap: wrap; /* Allow wrapping if needed */
+          flex-wrap: wrap;
           gap: 4px;
         }
       }
@@ -125,8 +124,9 @@
         gap: 8px;
         margin-bottom: 0;
         @include mobile-view {
-          flex-direction: column; /* Stack vertically */
+          flex-direction: column;
           width: 100%;
+          gap: 0;
         }
       }
 
@@ -163,6 +163,29 @@
       display: none !important;
     }
 
+    .finish-button {
+      width: 366pt;
+      height: 40pt;
+      border-radius: 11pt;
+      border: none;
+      background: #28A54A;
+      font-size: 14pt;
+      font-weight: 400;
+      color: white;
+      cursor: pointer;
+
+      &:disabled {
+        background: #D1D5DB;
+        color: #6B7280;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      @include mobile-view {
+        width: 100%;
+      }
+    }
+
     .navigation-buttons {
       display: flex;
       flex-direction: row;
@@ -172,7 +195,7 @@
       margin-top: 10px;
       margin-bottom: 10px;
       @include mobile-view {
-        flex-wrap: wrap; /* Allow buttons to wrap */
+        flex-wrap: wrap;
         gap: 8px;
         width: 100%;
         padding: 0 8px;
@@ -181,9 +204,9 @@
         border-radius: 0;
         width: 100px;
         @include mobile-view {
-          flex: 1 1 45%; /* Flexible width, wraps to two columns */
-          max-width: 140px; /* Cap width to prevent stretching */
-          min-width: 80px; /* Ensure usability */
+          flex: 1 1 45%;
+          max-width: 140px;
+          min-width: 80px;
         }
       }
     }
@@ -202,7 +225,7 @@
   margin-bottom: 16px;
   @include mobile-view {
     width: 100%;
-    padding: 12px; /* Reduce padding */
+    padding: 12px;
     box-sizing: border-box;
   }
   .file-preview,
@@ -214,8 +237,8 @@
     color: #28a745;
     font-weight: bold;
     @include mobile-view {
-      flex-wrap: wrap; /* Prevent overflow */
-      font-size: 14px; /* Smaller text */
+      flex-wrap: wrap;
+      font-size: 14px;
     }
   }
   i {
@@ -229,7 +252,7 @@
 .mat-datepicker-toggle {
   z-index: 10 !important;
   @include mobile-view {
-    width: auto; /* Prevent over-stretching */
+    width: auto;
   }
 }
 
@@ -249,16 +272,19 @@
   margin-top: 20px;
   margin-bottom: 20px;
   @include mobile-view {
-    width: 100%;
-    font-size: 12pt; /* Smaller font */
-    height: 22pt; /* Smaller height */
-    margin-left: 0; /* Center button */
+    //width: 100%;
+    font-size: 12pt;
+    height: 22pt;
+    //margin-left: 0;
     padding: 0 8px;
   }
 }
 
 .teeth-wrapper {
   margin-bottom: 50px;
+  @include mobile-view{
+    width: 100%;
+  }
   .top-numbers,
   .bottom-numbers {
     display: flex;
@@ -267,7 +293,7 @@
     p {
       margin-bottom: 0;
       @include mobile-view {
-        font-size: 10px; /* Smaller font to prevent overlap */
+        font-size: 10px;
       }
     }
   }
@@ -278,7 +304,7 @@
   &::before {
     content: "";
     position: absolute;
-    top: 438px;
+    top: 432px;
     height: 21%;
     bottom: 0;
     left: 50%;
@@ -289,8 +315,8 @@
     transform: translateX(-50%);
     z-index: 1;
     @include mobile-view {
-      top: 50%; /* Dynamic positioning */
-      height: 40%; /* Adjust height for mobile */
+      top: 44%;
+      height: 20%;
     }
   }
   .top-numbers,
@@ -311,6 +337,9 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  @include mobile-view{
+    flex-direction: column;
+  }
   p {
     margin-bottom: 0;
     align-items: center;
@@ -318,7 +347,20 @@
     cursor: pointer;
     display: flex;
     @include mobile-view {
-      font-size: 12px; /* Smaller font */
+      font-size: 12px;
+      justify-content: flex-end;
+      //margin-bottom: 10px;
+      width: 100%;
     }
   }
 }
+
+mat-form-field input {
+  font-weight: 600;
+}
+
+mat-form-field input::placeholder {
+  font-weight: normal;
+}
+
+

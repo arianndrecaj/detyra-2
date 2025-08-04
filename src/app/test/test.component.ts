@@ -140,7 +140,7 @@ export class TestComponent implements OnInit{
     }),
     teethDisease: this._fb.group({
       choice: ['', Validators.required],
-      whichOne: ['',Validators.required],
+      whichOne: ['',[Validators.required, Validators.pattern(this.NAME_PATTERN)]],
     }),
     upToDateCheckUp: this._fb.group({
       choice: ['', Validators.required],
@@ -152,7 +152,7 @@ export class TestComponent implements OnInit{
     }),
     abrasionsOrErosions: this._fb.group({
       choice: ['', Validators.required],
-      whichOne: ['', Validators.required],
+      whichOne: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
     }),
     misalignmentTeethOrJaw: this._fb.group({
       choice: ['', Validators.required],
@@ -181,12 +181,12 @@ export class TestComponent implements OnInit{
   createTeethGroup(): FormGroup {
     return this._fb.group({
       choice: ['', Validators.required],
-      markTeeth: ['', Validators.required],
-      markTeeth2: ['', Validators.required],
-      markTeeth3: ['', Validators.required],
-      markTeeth4: ['', Validators.required],
-      markTeeth5: ['', Validators.required],
-      markTeeth6: ['', Validators.required],
+      markTeeth: [''],
+      markTeeth2: [''],
+      markTeeth3: [''],
+      markTeeth4: [''],
+      markTeeth5: [''],
+      markTeeth6: [''],
     });
   }
 
@@ -236,11 +236,11 @@ export class TestComponent implements OnInit{
 
   createChoiceIfYesGroup() {
     return this._fb.group({
-      illness: ['', Validators.required],
+      illness: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
       cured: ['', Validators.required],
       date: ['', Validators.required],
-      doctorName: ['', Validators.required],
-      doctorSpeciality: ['', Validators.required],
+      doctorName: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
+      doctorSpeciality: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
       doctorStreet: ['', Validators.required],
       doctorNumber: ['', Validators.required],
       doctorZipCode: ['', Validators.required],
@@ -279,7 +279,6 @@ export class TestComponent implements OnInit{
     const control = this.mainForm.get(path);
     return (control?.hasError('required') || control?.hasError('pattern')) && control?.touched;
   }
-
 
   getCheckboxValue(path: string): boolean {
     const control = this.mainForm.get(path);
