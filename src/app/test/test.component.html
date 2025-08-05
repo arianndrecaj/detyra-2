@@ -27,6 +27,7 @@
 
         @if (currentStep >= 1) {
           <mat-expansion-panel
+            id="step-1"
             [class.disabled]="!isQuestionComplete('everBeenInsuredWithHelsana')"
             [disabled]="!isQuestionComplete('everBeenInsuredWithHelsana')"
             [expanded]="currentStep === 1">
@@ -47,14 +48,14 @@
                 </mat-form-field>
                 <div class="form-row">
                   <mat-form-field [class.has-error]="hasRequiredValidation('personalInfo.grosse')">
-                    <input type="number" formControlName="grosse" matInput placeholder="Grösse (cm)" value="grosse">
+                    <input type="text" formControlName="grosse" matInput placeholder="Grösse (cm)" value="grosse">
                     <span matSuffix>cm</span>
                     @if (hasRequiredValidation('personalInfo.grosse')) {
                       <mat-error>Enter gross!</mat-error>
                     }
                   </mat-form-field>
                   <mat-form-field [class.has-error]="hasRequiredValidation('personalInfo.gewicht')">
-                    <input type="number" formControlName="gewicht" matInput placeholder="Gewicht"/>
+                    <input type="text" formControlName="gewicht" matInput placeholder="Gewicht"/>
                     <span matSuffix>kg</span>
                     @if (hasRequiredValidation('personalInfo.gewicht')) {
                       <mat-error>Enter Gewicht!</mat-error>
@@ -62,7 +63,7 @@
                   </mat-form-field>
                 </div>
                 <mat-form-field [class.has-error]="hasRequiredValidation('personalInfo.bmi')">
-                  <input type="number" formControlName="bmi" matInput placeholder="BMI" value="bmi">
+                  <input type="text" formControlName="bmi" matInput placeholder="BMI" value="bmi">
                   <span matSuffix>BMI</span>
                   @if (hasRequiredValidation('personalInfo.bmi')) {
                     <mat-error>Enter bmi!</mat-error>
@@ -79,6 +80,7 @@
 
         @if (currentStep >= 2) {
           <mat-expansion-panel
+            id="step-2"
             [class.disabled]="!isQuestionComplete('personalInfo')"
             [disabled]="!isQuestionComplete('personalInfo')"
             [expanded]="currentStep === 2">
@@ -149,6 +151,7 @@
 
         @if (currentStep >= 3) {
           <mat-expansion-panel
+            id="step-3"
             [class.disabled]="!isQuestionComplete('doctorInfo')"
             [disabled]="!isQuestionComplete('doctorInfo')"
             [expanded]="currentStep === 3">
@@ -157,18 +160,19 @@
             </mat-expansion-panel-header>
             <div formGroupName="medicalTreatments" [class.disabled]="!isQuestionComplete('doctorInfo')">
               <p [class.disabled-label]="!isQuestionComplete('doctorInfo')">
-                <img src="/assets/images/Icon.png" alt="icon" title="hover"/>
+                <img src="/assets/images/Icon.png" alt="icon" title="Medizinische Behandlungen oder Kontrollen in den letzten 5 Jahren oder geplant."/>
                 Sind Sie zurzeit in einer laufenden Behandlung, ist eine solche geplant oder waren Sie in den letzten 5 Jahren in ärztlicher/zahnärztlicher/naturärztlicher/therapeutischer Behandlung/Untersuchung/Kontrolle oder wurde Ihnen eine solche empfohlen, jedoch noch nicht durchgeführt?
               </p>
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('medicalTreatments.choice', 'step-3')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
               @if (mainForm.get('medicalTreatments.choice')?.value === 'Ja') {
-                <div formArrayName="choiceIfYes">
+                <div formArrayName="choiceIfYes" >
                   @for (group of getFormArray('medicalTreatments.choiceIfYes').controls; track $index; let i = $index) {
                     <div [formGroupName]="i">
                       <div class="entfernen">
@@ -187,8 +191,8 @@
                         formControlName="cured"
                         class="custom-toggle-group custom-toggle-group--gap"
                         appearance="legacy">
-                        <mat-button-toggle value="1">Nein</mat-button-toggle>
-                        <mat-button-toggle value="2">Ja</mat-button-toggle>
+                        <mat-button-toggle value="Nein">Nein</mat-button-toggle>
+                        <mat-button-toggle value="Ja">Ja</mat-button-toggle>
                       </mat-button-toggle-group>
                       <p>Datum der letzten/ geplanten Behandlung</p>
                       <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.' + i + '.date')">
@@ -209,7 +213,7 @@
                             }
                           </mat-form-field>
                           <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.' + i +'.doctorSpeciality')">
-                            <input type="text" formControlName="doctorSpeciality" matInput placeholder="Nachname" />
+                            <input type="text" formControlName="doctorSpeciality" matInput placeholder="Speciality" />
                             @if (hasRequiredValidation('medicalTreatments.choiceIfYes.' + i +'.doctorSpeciality')) {
                               <mat-error>Speciality ist erforderlich,nur Text!</mat-error>
                             }
@@ -231,7 +235,7 @@
                         </div>
                         <div class="pair pair-30-70">
                           <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.'+ i +'.doctorZipCode')">
-                            <input type="number" formControlName="doctorZipCode" matInput placeholder="ZIP" />
+                            <input type="text" formControlName="doctorZipCode" matInput placeholder="ZIP" />
                             @if (hasRequiredValidation('medicalTreatments.choiceIfYes.'+ i +'.doctorZipCode')) {
                               <mat-error>PLZ ist erforderlich</mat-error>
                             }
@@ -266,6 +270,7 @@
 
         @if (currentStep >= 4) {
           <mat-expansion-panel
+            id="step-4"
             [class.disabled]="!isQuestionComplete('medicalTreatments')"
             [disabled]="!isQuestionComplete('medicalTreatments')"
             [expanded]="currentStep === 4">
@@ -299,6 +304,7 @@
 
         @if (currentStep >= 5) {
           <mat-expansion-panel
+            id="step-5"
             [class.disabled]="!isQuestionComplete('rejectedByInsurance')"
             [disabled]="!isQuestionComplete('rejectedByInsurance')"
             [expanded]="currentStep === 5">
@@ -358,6 +364,7 @@
 
         @if (currentStep >= 6) {
           <mat-expansion-panel
+            id="step-6"
             [class.disabled]="!isQuestionComplete('misaligned')"
             [disabled]="!isQuestionComplete('misaligned')"
             [expanded]="currentStep === 6">
@@ -368,7 +375,8 @@
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('disability.choice','step-6')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -432,17 +440,19 @@
 
         @if (currentStep >= 7) {
           <mat-expansion-panel
+            id="step-7"
             [class.disabled]="!isQuestionComplete('disability')"
             [disabled]="!isQuestionComplete('disability')"
             [expanded]="currentStep === 7">
             <mat-expansion-panel-header>
               <h2>8. Medikamente und Suchtmittel</h2>
             </mat-expansion-panel-header>
-            <div formGroupName="medications" [class.disabled]="!isQuestionComplete('disability')">
+            <div  formGroupName="medications" [class.disabled]="!isQuestionComplete('disability')">
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('medications.choice', 'step-7')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -510,6 +520,7 @@
 
         @if (currentStep >= 8) {
           <mat-expansion-panel
+            id="step-8"
             [class.disabled]="!isQuestionComplete('medications')"
             [disabled]="!isQuestionComplete('medications')"
             [expanded]="currentStep === 8">
@@ -520,16 +531,19 @@
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('drugs.choice', 'step-8')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
               @if (mainForm.get('drugs.choice')?.value === 'Ja') {
                 <p>Nehmen/nahmen Sie Drogen</p>
                 <mat-button-toggle-group
+                  id="step-8-sub"
                   formControlName="doYouTakeDrugs"
                   class="custom-toggle-group custom-toggle-group--gap"
-                  appearance="legacy">
+                  appearance="legacy"
+                  (change)="scrollToSubQuestion('drugs.doYouTakeDrugs', 'step-8-sub')">
                   <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                   <mat-button-toggle value="Ja">Ja</mat-button-toggle>
                 </mat-button-toggle-group>
@@ -631,17 +645,19 @@
 
         @if (currentStep >= 9) {
           <mat-expansion-panel
+            id="step-9"
             [class.disabled]="!isQuestionComplete('drugs')"
             [disabled]="!isQuestionComplete('drugs')"
             [expanded]="currentStep === 9">
             <mat-expansion-panel-header>
               <h2>10. Weitere Fragen</h2>
             </mat-expansion-panel-header>
-            <div formGroupName="furtherQuestions" [class.disabled]="!isQuestionComplete('drugs')">
+            <div  formGroupName="furtherQuestions" [class.disabled]="!isQuestionComplete('drugs')">
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('furtherQuestions.choice','step-9')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -666,6 +682,7 @@
 
         @if (currentStep >= 10) {
           <mat-expansion-panel
+            id="step-10"
             [class.disabled]="!isQuestionComplete('furtherQuestions')"
             [disabled]="!isQuestionComplete('furtherQuestions')"
             [expanded]="currentStep === 10">
@@ -707,6 +724,7 @@
         @if (currentStep >= 11) {
           <button class="dental-part">Dental Fragen</button>
           <mat-expansion-panel
+            id="step-11"
             [class.disabled]="!isQuestionComplete('medicalReport')"
             [disabled]="!isQuestionComplete('medicalReport')"
             [expanded]="currentStep === 11">
@@ -732,6 +750,7 @@
 
         @if (currentStep >= 12) {
           <mat-expansion-panel
+            id="step-12"
             [class.disabled]="!isQuestionComplete('dentalCheckUp')"
             [disabled]="!isQuestionComplete('dentalCheckUp')"
             [expanded]="currentStep === 12">
@@ -742,7 +761,8 @@
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('teethDisease.choice','step-12')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -765,6 +785,7 @@
 
         @if (currentStep >= 13) {
           <mat-expansion-panel
+            id="step-13"
             [class.disabled]="!isQuestionComplete('teethDisease')"
             [disabled]="!isQuestionComplete('teethDisease')"
             [expanded]="currentStep === 13">
@@ -775,7 +796,8 @@
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('upToDateCheckUp.choice','step-13')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -802,6 +824,7 @@
 
         @if (currentStep >= 14) {
           <mat-expansion-panel
+            id="step-14"
             [class.disabled]="!isQuestionComplete('upToDateCheckUp')"
             [disabled]="!isQuestionComplete('upToDateCheckUp')"
             [expanded]="currentStep === 14">
@@ -812,7 +835,8 @@
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('treatmentPlanned.choice','step-14')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -835,6 +859,7 @@
 
         @if (currentStep >= 15) {
           <mat-expansion-panel
+            id="step-15"
             [class.disabled]="!isQuestionComplete('treatmentPlanned')"
             [disabled]="!isQuestionComplete('treatmentPlanned')"
             [expanded]="currentStep === 15">
@@ -845,7 +870,8 @@
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('abrasionsOrErosions.choice','step-15')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -868,6 +894,7 @@
 
         @if (currentStep >= 16) {
           <mat-expansion-panel
+            id="step-16"
             [class.disabled]="!isQuestionComplete('abrasionsOrErosions')"
             [disabled]="!isQuestionComplete('abrasionsOrErosions')"
             [expanded]="currentStep === 16">
@@ -878,7 +905,8 @@
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('misalignmentTeethOrJaw.choice','step-16')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -901,6 +929,7 @@
 
         @if (currentStep >= 17) {
           <mat-expansion-panel
+            id="step-17"
             [class.disabled]="!isQuestionComplete('misalignmentTeethOrJaw')"
             [disabled]="!isQuestionComplete('misalignmentTeethOrJaw')"
             [expanded]="currentStep === 17">
@@ -911,7 +940,8 @@
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('areFillingsPresent.choice','step-17')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -936,6 +966,7 @@
 
         @if (currentStep >= 18) {
           <mat-expansion-panel
+            id="step-18"
             [class.disabled]="!isQuestionComplete('areFillingsPresent')"
             [disabled]="!isQuestionComplete('areFillingsPresent')"
             [expanded]="currentStep === 18">
@@ -946,7 +977,8 @@
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('fixedOrRemovedDenture.choice','step-18')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -971,6 +1003,7 @@
 
         @if (currentStep >= 19) {
           <mat-expansion-panel
+            id="step-19"
             [class.disabled]="!isQuestionComplete('fixedOrRemovedDenture')"
             [disabled]="!isQuestionComplete('fixedOrRemovedDenture')"
             [expanded]="currentStep === 19">
@@ -981,7 +1014,8 @@
               <mat-button-toggle-group
                 formControlName="conditionOfOralHygiene"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('oralHygiene.conditionOfOralHygiene','step-19')">
                 <mat-button-toggle value="Gut">Gut</mat-button-toggle>
                 <mat-button-toggle value="Mittelmässig">Mittelmässig</mat-button-toggle>
                 <mat-button-toggle value="Schlecht">Schlecht</mat-button-toggle>
@@ -996,6 +1030,7 @@
 
         @if (currentStep >= 20) {
           <mat-expansion-panel
+            id="step-20"
             [class.disabled]="!isQuestionComplete('oralHygiene')"
             [disabled]="!isQuestionComplete('oralHygiene')"
             [expanded]="currentStep === 20">
@@ -1006,7 +1041,8 @@
               <mat-button-toggle-group
                 formControlName="conditionOfPeriodontium"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('periodontium.conditionOfPeriodontium','step-20')">
                 <mat-button-toggle value="Gut">Gut</mat-button-toggle>
                 <mat-button-toggle value="Mittelmässig">Mittelmässig</mat-button-toggle>
                 <mat-button-toggle value="Schlecht">Schlecht</mat-button-toggle>
@@ -1021,6 +1057,7 @@
 
         @if (currentStep >= 21) {
           <mat-expansion-panel
+            id="step-21"
             [class.disabled]="!isQuestionComplete('periodontium')"
             [disabled]="!isQuestionComplete('periodontium')"
             [expanded]="currentStep === 21">
@@ -1031,7 +1068,8 @@
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('missingUnReplacedTeeth.choice','step-21')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -1132,6 +1170,7 @@
 
         @if (currentStep >= 22) {
           <mat-expansion-panel
+            id="step-22"
             [class.disabled]="!isQuestionComplete('missingUnReplacedTeeth')"
             [disabled]="!isQuestionComplete('missingUnReplacedTeeth')"
             [expanded]="currentStep === 22">
@@ -1142,7 +1181,8 @@
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('decayedTeeth.choice','step-22')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -1243,6 +1283,7 @@
 
         @if (currentStep >= 23) {
           <mat-expansion-panel
+            id="step-23"
             [class.disabled]="!isQuestionComplete('decayedTeeth')"
             [disabled]="!isQuestionComplete('decayedTeeth')"
             [expanded]="currentStep === 23">
@@ -1253,7 +1294,8 @@
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('rootCanalTreatedTeeth.choice','step-23')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -1354,6 +1396,7 @@
 
         @if (currentStep >= 24) {
           <mat-expansion-panel
+            id="step-24"
             [class.disabled]="!isQuestionComplete('rootCanalTreatedTeeth')"
             [disabled]="!isQuestionComplete('rootCanalTreatedTeeth')"
             [expanded]="currentStep === 24">
@@ -1364,7 +1407,8 @@
               <mat-button-toggle-group
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
-                appearance="legacy">
+                appearance="legacy"
+                (change)="scrollToSubQuestion('accidentDamagedTeeth.choice','step-24')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -1455,7 +1499,7 @@
                   </div>
                 </div>
               }
-              <button class="finish-button" [disabled]="!isQuestionComplete('accidentDamagedTeeth')" (click)="goToNextStep()">Fertig</button>
+              <button class="finish-button" [disabled]="!isQuestionComplete('accidentDamagedTeeth')" (click)="finishedForm()">Fertig</button>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
               </div>

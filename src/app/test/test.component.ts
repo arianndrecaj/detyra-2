@@ -1,9 +1,10 @@
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Component, inject, OnInit, setTestabilityGetter} from '@angular/core';
+import {Component, inject, OnInit, setTestabilityGetter, QueryList, ViewChildren, ElementRef} from '@angular/core';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 import {MatError, MatFormField, MatInput, MatInputModule} from '@angular/material/input';
 import {MatSelect} from '@angular/material/select';
 import {MatNativeDateModule, MatOption, provideNativeDateAdapter} from '@angular/material/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {
   DRUGS_HOW_OFTEN_OPTIONS,
   INTERVAL_OPTIONS,
@@ -22,7 +23,7 @@ import {checkboxValidator} from '../validators/checkbox-validator';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-test',
@@ -37,6 +38,8 @@ export class TestComponent implements OnInit{
   imagePreview: string[] = [];
   minDate: Date;
   NAME_PATTERN = /^[a-zA-ZäöüÄÖÜß\s]+$/;
+  NUMBER_PATTERN = /^\d*\.?\d*$/;
+  ZIP_PATTER = /^\d{5}(?:[-\s]\d{4})?$/;
   occupationOptions = OCCUPATION_OPTIONS;
   intervalOptions = INTERVAL_OPTIONS;
   teethOptions1 = TEETH1_OPTIONS;
@@ -47,7 +50,7 @@ export class TestComponent implements OnInit{
   teethOptions6 = TEETH6_OPTIONS;
   drugOptions = DRUGS_HOW_OFTEN_OPTIONS;
 
-  constructor() {
+  constructor(private router: Router) {
     this.mainForm.valueChanges.subscribe(() => {
       const completed = Object.entries(this.mainForm.controls).reduce((acc, [key, control]) => {
         if (control?.valid && control?.value) {
@@ -77,6 +80,8 @@ export class TestComponent implements OnInit{
         }
       });
     });
+    this.mainForm.reset();
+    this.currentStep = 0;
   }
 
   mainForm = this._fb.group({
@@ -85,9 +90,9 @@ export class TestComponent implements OnInit{
     }),
     personalInfo: this._fb.group({
       occupation: ['',Validators.required],
-      grosse: ['',Validators.required],
-      gewicht: ['',Validators.required],
-      bmi: ['',Validators.required],
+      grosse: ['',[Validators.required,Validators.pattern(this.NUMBER_PATTERN)]],
+      gewicht: ['',[Validators.required,Validators.pattern(this.NUMBER_PATTERN)]],
+      bmi: ['',[Validators.required,Validators.pattern(this.NUMBER_PATTERN)]],
     }),
     doctorInfo: this._fb.group({
       vorname: ['',[Validators.required, Validators.pattern(this.NAME_PATTERN)]],
@@ -243,7 +248,7 @@ export class TestComponent implements OnInit{
       doctorSpeciality: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
       doctorStreet: ['', Validators.required],
       doctorNumber: ['', Validators.required],
-      doctorZipCode: ['', Validators.required],
+      doctorZipCode: ['', [Validators.required,Validators.pattern(this.ZIP_PATTER)]],
       doctorCity: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
     });
   }
@@ -288,18 +293,48 @@ export class TestComponent implements OnInit{
   goToNextStep() {
     const stepKeys = Object.keys(this.mainForm.controls);
     const currentGroup = this.mainForm.get(stepKeys[this.currentStep]);
-    if (this.isQuestionComplete(stepKeys[this.currentStep])) {
+
+    if (this.isQuestionComplete(stepKeys[this.currentStep]) || currentGroup?.valid) {
       this.currentStep++;
-    } else if (currentGroup?.valid) {
-      this.currentStep++;
+
+      setTimeout(() => {
+        const el = document.getElementById(`step-${this.currentStep}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     } else {
       currentGroup?.markAllAsTouched();
+    }
+  }
+
+  scrollToSubQuestion(formPath: string, elementId: string): void {
+    const value = this.mainForm.get(formPath)?.value;
+    if (value === 'Ja') {
+      setTimeout(() => {
+        const el = document.getElementById(elementId);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
   }
 
   goToPreviousStep() {
     if (this.currentStep > 0) {
       this.currentStep--;
+    }
+  }
+
+  finishedForm() {
+    const stepKeys = Object.keys(this.mainForm.controls);
+    const finalStep = stepKeys[stepKeys.length - 1];
+
+    if (this.isQuestionComplete(finalStep)) {
+     this.router.navigate(['/success']);
+
+      this.mainForm.reset();
+      this.currentStep = 0;
+    } else {
+      this.mainForm.get(finalStep)?.markAllAsTouched();
     }
   }
 
