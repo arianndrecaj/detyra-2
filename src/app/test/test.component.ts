@@ -1,10 +1,9 @@
-import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Component, inject, OnInit, setTestabilityGetter, QueryList, ViewChildren, ElementRef} from '@angular/core';
-import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
-import {MatError, MatFormField, MatInput, MatInputModule} from '@angular/material/input';
-import {MatSelect} from '@angular/material/select';
-import {MatNativeDateModule, MatOption, provideNativeDateAdapter} from '@angular/material/core';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
+import { MatError, MatFormField, MatInput, MatInputModule } from '@angular/material/input';
+import { MatSelect } from '@angular/material/select';
+import { MatNativeDateModule, MatOption, provideNativeDateAdapter } from '@angular/material/core';
 import {
   DRUGS_HOW_OFTEN_OPTIONS,
   INTERVAL_OPTIONS,
@@ -16,59 +15,81 @@ import {
   TEETH5_OPTIONS,
   TEETH6_OPTIONS
 } from '../../option';
-import {MatAccordion, MatExpansionPanel, MatExpansionPanelHeader} from '@angular/material/expansion';
-import {MatCheckbox} from '@angular/material/checkbox';
-import {MatButton} from '@angular/material/button';
-import {checkboxValidator} from '../validators/checkbox-validator';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
-import {Router} from '@angular/router';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatButton } from '@angular/material/button';
+import { checkboxValidator } from '../validators/checkbox-validator';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-test',
-  imports: [MatIconModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonToggleGroup, MatButtonToggle, MatFormField, MatSelect, MatOption, MatInput, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatError, MatCheckbox, MatButton, MatDatepickerModule, MatNativeDateModule],
+  imports: [
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatButtonToggleGroup,
+    MatButtonToggle,
+    MatFormField,
+    MatSelect,
+    MatOption,
+    MatInput,
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatError,
+    MatCheckbox,
+    MatButton,
+    MatDatepickerModule,
+    MatNativeDateModule
+  ],
   templateUrl: './test.component.html',
   providers: [provideNativeDateAdapter()],
   styleUrl: './test.component.scss',
 })
-export class TestComponent implements OnInit{
+export class TestComponent implements OnInit {
   private _fb = inject(FormBuilder);
   currentStep = 0;
+  maxReachedStep = 0;
+  returnStep: number | null = null;
   imagePreview: string[] = [];
   minDate: Date;
   NAME_PATTERN = /^[a-zA-ZäöüÄÖÜß\s]+$/;
   NUMBER_PATTERN = /^\d*\.?\d*$/;
-  ZIP_PATTER = /^\d{5}(?:[-\s]\d{4})?$/;
+  ZIP_PATTERN = /^\d{5}(?:[-\s]\d{4})?$/;
   occupationOptions = OCCUPATION_OPTIONS;
   intervalOptions = INTERVAL_OPTIONS;
   teethOptions1 = TEETH1_OPTIONS;
-  teethOptions2 =  TEETH2_OPTIONS;
+  teethOptions2 = TEETH2_OPTIONS;
   teethOptions3 = TEETH3_OPTION;
   teethOptions4 = TEETH4_OPTION;
   teethOptions5 = TEETH5_OPTIONS;
   teethOptions6 = TEETH6_OPTIONS;
   drugOptions = DRUGS_HOW_OFTEN_OPTIONS;
 
+  invalidSteps: Set<number> = new Set();
+
   constructor(private router: Router) {
+    this.minDate = new Date();
+    this.minDate.setFullYear(this.minDate.getFullYear() - 1);
+
     this.mainForm.valueChanges.subscribe(() => {
+      this.updateInvalidSteps();
       const completed = Object.entries(this.mainForm.controls).reduce((acc, [key, control]) => {
-        if (control?.valid && control?.value) {
+        if (this.isQuestionComplete(key)) {
           acc[key] = control.value;
         }
         return acc;
       }, {} as any);
-
       console.log('Completed form groups:', completed);
     });
-
-    this.minDate = new Date();
-    this.minDate.setFullYear(this.minDate.getFullYear() - 1);
   }
 
   ngOnInit() {
     const doctorGroup = this.mainForm.get('doctorInfo') as FormGroup;
-
     doctorGroup.get('checkbox')?.valueChanges.subscribe((checked: boolean) => {
       Object.entries(doctorGroup.controls).forEach(([key, control]) => {
         if (key === 'checkbox') return;
@@ -80,8 +101,11 @@ export class TestComponent implements OnInit{
         }
       });
     });
+
+    this.updateInvalidSteps();
     this.mainForm.reset();
     this.currentStep = 0;
+    this.maxReachedStep = 0;
   }
 
   mainForm = this._fb.group({
@@ -89,87 +113,87 @@ export class TestComponent implements OnInit{
       answer: ['', Validators.required],
     }),
     personalInfo: this._fb.group({
-      occupation: ['',Validators.required],
-      grosse: ['',[Validators.required,Validators.pattern(this.NUMBER_PATTERN)]],
-      gewicht: ['',[Validators.required,Validators.pattern(this.NUMBER_PATTERN)]],
-      bmi: ['',[Validators.required,Validators.pattern(this.NUMBER_PATTERN)]],
+      occupation: ['', Validators.required],
+      grosse: ['', [Validators.required, Validators.pattern(this.NUMBER_PATTERN)]],
+      gewicht: ['', [Validators.required, Validators.pattern(this.NUMBER_PATTERN)]],
+      bmi: ['', [Validators.required, Validators.pattern(this.NUMBER_PATTERN)]],
     }),
     doctorInfo: this._fb.group({
-      vorname: ['',[Validators.required, Validators.pattern(this.NAME_PATTERN)]],
-      nachname: ['',[Validators.required, Validators.pattern(this.NAME_PATTERN)]],
-      strasse: ['',Validators.required],
-      nr: ['',Validators.required],
-      plz: ['',Validators.required],
-      ort: ['',Validators.required],
+      vorname: ['', [Validators.required, Validators.pattern(this.NAME_PATTERN)]],
+      nachname: ['', [Validators.required, Validators.pattern(this.NAME_PATTERN)]],
+      strasse: ['', Validators.required],
+      nr: ['', Validators.required],
+      plz: ['', Validators.required],
+      ort: ['', Validators.required],
       checkbox: [false],
     }, { validators: checkboxValidator() }),
     medicalTreatments: this._fb.group({
-      choice: ['',Validators.required],
+      choice: ['', Validators.required],
       choiceIfYes: this._fb.array([this.createChoiceIfYesGroup()])
     }),
     rejectedByInsurance: this._fb.group({
       choice: ['', Validators.required],
-      reason: ['',[Validators.required,Validators.pattern(this.NAME_PATTERN)]]
+      reason: ['',[Validators.required,Validators.pattern(this.NAME_PATTERN)]],
     }),
     misaligned: this._fb.group({
-      misalignedTeeth: ['',Validators.required],
-      misalignedJaw: ['',Validators.required],
-      dentalTreatment: ['',Validators.required],
-      dentalCheckUp: ['',Validators.required],
-      dentalCleanUp: ['',Validators.required],
+      misalignedTeeth: ['', Validators.required],
+      misalignedJaw: ['', Validators.required],
+      dentalTreatment: ['', Validators.required],
+      dentalCheckUp: ['', Validators.required],
+      dentalCleanUp: ['', Validators.required],
     }),
     disability: this._fb.group({
-      choice: ['',Validators.required],
+      choice: ['', Validators.required],
       ifDisabilityYes: this._fb.array([this.createIfDisability()])
     }),
     medications: this._fb.group({
-      choice: ['',Validators.required],
+      choice: ['', Validators.required],
       ifTakingMeds: this._fb.array([this.createIfTakingMeds()])
     }),
     drugs: this._fb.group({
       choice: ['', Validators.required],
-      doYouTakeDrugs: [''],
+      doYouTakeDrugs: ['',Validators.required],
       ifTakingDrugs: this._fb.array([this.createIfTakingDrugs()]),
-      dailyCigar: ['',Validators.required],
-      dailyAlcohol: ['',Validators.required],
+      dailyCigar: ['', Validators.required],
+      dailyAlcohol: ['', Validators.required],
     }),
     furtherQuestions: this._fb.group({
       choice: ['', Validators.required],
-      pregnancyExpected: ['', Validators.required],
+      pregnancyExpected: ['',Validators.required],
     }),
     medicalReport: this._fb.group({
-      uploadedReport: ['',Validators.required],
+      uploadedReport: ['', Validators.required],
     }),
     dentalCheckUp: this._fb.group({
-      checkUpDate: ['',Validators.required],
+      checkUpDate: ['', Validators.required],
     }),
     teethDisease: this._fb.group({
       choice: ['', Validators.required],
-      whichOne: ['',[Validators.required, Validators.pattern(this.NAME_PATTERN)]],
+      whichOne: ['',Validators.required],
     }),
     upToDateCheckUp: this._fb.group({
       choice: ['', Validators.required],
-      whatIntervals: ['', Validators.required],
+      whatIntervals: ['',Validators.required],
     }),
     treatmentPlanned: this._fb.group({
       choice: ['', Validators.required],
-      whenIsTreatmentPlanned: ['',  [Validators.required, Validators.pattern(this.NAME_PATTERN)]],
+      whenIsTreatmentPlanned: ['',Validators.required],
     }),
     abrasionsOrErosions: this._fb.group({
       choice: ['', Validators.required],
-      whichOne: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
+      whichOne: ['',Validators.required],
     }),
     misalignmentTeethOrJaw: this._fb.group({
       choice: ['', Validators.required],
-      whatTypeOfMisalignment: ['', Validators.required],
+      whatTypeOfMisalignment: ['',Validators.required],
     }),
     areFillingsPresent: this._fb.group({
       choice: ['', Validators.required],
-      conditionOfFillings: ['', Validators.required],
+      conditionOfFillings: [''],
     }),
     fixedOrRemovedDenture: this._fb.group({
       choice: ['', Validators.required],
-      conditionOfRemovedDenture: ['', Validators.required],
+      conditionOfRemovedDenture: [''],
     }),
     oralHygiene: this._fb.group({
       conditionOfOralHygiene: ['', Validators.required],
@@ -181,7 +205,7 @@ export class TestComponent implements OnInit{
     decayedTeeth: this.createTeethGroup(),
     rootCanalTreatedTeeth: this.createTeethGroup(),
     accidentDamagedTeeth: this.createTeethGroup(),
-  })
+  });
 
   createTeethGroup(): FormGroup {
     return this._fb.group({
@@ -197,19 +221,23 @@ export class TestComponent implements OnInit{
 
   createIfTakingDrugs() {
     const drugsGroup = this._fb.group({
-      whichOne: ['', Validators.required],
-      howOften: ['', Validators.required],
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
+      whichOne: [''],
+      howOften: [''],
+      startDate: ['',Validators.required],
+      endDate: [''],
       checkbox: [false],
-    })
+    });
     drugsGroup.get('checkbox')?.valueChanges.subscribe(checked => {
+      const endDateControl = drugsGroup.get('endDate');
       if (checked) {
-        drugsGroup.get('endDate')?.disable();
-        drugsGroup.get('endDate')?.setValue('');
+        endDateControl?.clearValidators();
+        endDateControl?.setValue('');
+        endDateControl?.disable({ emitEvent: false });
       } else {
-        drugsGroup.get('endDate')?.enable();
+        endDateControl?.setValidators([Validators.required]);
+        endDateControl?.enable({ emitEvent: false });
       }
+      endDateControl?.updateValueAndValidity({ emitEvent: false });
     });
     return drugsGroup;
   }
@@ -218,38 +246,42 @@ export class TestComponent implements OnInit{
     const medGroup = this._fb.group({
       typeOfMed: ['', Validators.required],
       startDate: ['', Validators.required],
-      endDate: ['',Validators.required],
-      checkbox: [false]
+      endDate: [''],
+      checkbox: [false],
     });
     medGroup.get('checkbox')?.valueChanges.subscribe(checked => {
+      const endDateControl = medGroup.get('endDate');
       if (checked) {
-        medGroup.get('endDate')?.disable();
-        medGroup.get('endDate')?.setValue('');
+        endDateControl?.clearValidators();
+        endDateControl?.setValue('');
+        endDateControl?.disable({ emitEvent: false });
       } else {
-        medGroup.get('endDate')?.enable();
+        endDateControl?.setValidators([Validators.required]);
+        endDateControl?.enable({ emitEvent: false });
       }
+      endDateControl?.updateValueAndValidity({ emitEvent: false });
     });
     return medGroup;
   }
 
-  createIfDisability(){
+  createIfDisability() {
     return this._fb.group({
-      typeOfDisability: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
-      uploadIV: ['',Validators.required],
+      typeOfDisability: ['', [Validators.required, Validators.pattern(this.NAME_PATTERN)]],
+      uploadIV: ['', Validators.required],
     });
   }
 
   createChoiceIfYesGroup() {
     return this._fb.group({
-      illness: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
+      illness: ['', [Validators.required, Validators.pattern(this.NAME_PATTERN)]],
       cured: ['', Validators.required],
       date: ['', Validators.required],
-      doctorName: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
-      doctorSpeciality: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
-      doctorStreet: ['', Validators.required],
-      doctorNumber: ['', Validators.required],
-      doctorZipCode: ['', [Validators.required,Validators.pattern(this.ZIP_PATTER)]],
-      doctorCity: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
+      doctorName: ['', [Validators.required, Validators.pattern(this.NAME_PATTERN)]],
+      doctorSpeciality: ['', [Validators.required, Validators.pattern(this.NAME_PATTERN)]],
+      doctorStreet: ['', [Validators.required,Validators.pattern(this.NAME_PATTERN)]],
+      doctorNumber: ['', [Validators.required,Validators.pattern(this.NUMBER_PATTERN)]],
+      doctorZipCode: ['', [Validators.required, Validators.pattern(this.ZIP_PATTERN)]],
+      doctorCity: ['', [Validators.required, Validators.pattern(this.NAME_PATTERN)]],
     });
   }
 
@@ -262,7 +294,7 @@ export class TestComponent implements OnInit{
     if (arr.length === 0 || arr.at(arr.length - 1).valid) {
       arr.push(createGroupFn());
     } else {
-      alert('Please fill out the current entry before adding a new one.');
+      alert('Bitte füllen Sie den aktuellen Eintrag aus, bevor Sie einen neuen hinzufügen.');
     }
   }
 
@@ -271,7 +303,7 @@ export class TestComponent implements OnInit{
     if (arr.length > 1) {
       arr.removeAt(index);
     } else {
-      alert('Cannot remove the last entry.');
+      alert('Der letzte Eintrag kann nicht entfernt werden.');
     }
   }
 
@@ -290,21 +322,67 @@ export class TestComponent implements OnInit{
     return control?.value === true;
   }
 
+  updateInvalidSteps() {
+    this.invalidSteps.clear();
+    const stepKeys = Object.keys(this.mainForm.controls);
+    stepKeys.forEach((key, index) => {
+      if (!this.isQuestionComplete(key)) {
+        this.invalidSteps.add(index);
+      }
+    });
+  }
+
+  arePreviousStepsValid(): boolean {
+    const stepKeys = Object.keys(this.mainForm.controls);
+    for (let i = 0; i < this.currentStep; i++) {
+      if (!this.isQuestionComplete(stepKeys[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   goToNextStep() {
     const stepKeys = Object.keys(this.mainForm.controls);
     const currentGroup = this.mainForm.get(stepKeys[this.currentStep]);
 
-    if (this.isQuestionComplete(stepKeys[this.currentStep]) || currentGroup?.valid) {
-      this.currentStep++;
-
+    if (this.isQuestionComplete(stepKeys[this.currentStep]) && this.arePreviousStepsValid()) {
+      if (this.returnStep !== null && this.returnStep > this.currentStep) {
+        this.currentStep = this.returnStep;
+        this.returnStep = null;
+      } else {
+        this.currentStep++;
+        this.maxReachedStep = Math.max(this.maxReachedStep, this.currentStep);
+      }
       setTimeout(() => {
         const el = document.getElementById(`step-${this.currentStep}`);
         if (el) {
           el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const firstInvalidField = el.querySelector('.has-error input, .has-error select');
+          if (firstInvalidField) {
+            (firstInvalidField as HTMLElement).focus();
+          }
         }
       }, 100);
     } else {
       currentGroup?.markAllAsTouched();
+      if (!this.arePreviousStepsValid()) {
+        this.returnStep = this.currentStep;
+        const firstInvalidStep = Array.from(this.invalidSteps).sort((a, b) => a - b)[0];
+        if (firstInvalidStep !== undefined) {
+          this.currentStep = firstInvalidStep;
+          setTimeout(() => {
+            const el = document.getElementById(`step-${this.currentStep}`);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              const firstInvalidField = el.querySelector('.has-error input, .has-error select');
+              if (firstInvalidField) {
+                (firstInvalidField as HTMLElement).focus();
+              }
+            }
+          }, 100);
+        }
+      }
     }
   }
 
@@ -321,6 +399,13 @@ export class TestComponent implements OnInit{
   goToPreviousStep() {
     if (this.currentStep > 0) {
       this.currentStep--;
+      this.returnStep = null;
+      setTimeout(() => {
+        const el = document.getElementById(`step-${this.currentStep}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }
   }
 
@@ -328,11 +413,12 @@ export class TestComponent implements OnInit{
     const stepKeys = Object.keys(this.mainForm.controls);
     const finalStep = stepKeys[stepKeys.length - 1];
 
-    if (this.isQuestionComplete(finalStep)) {
-     this.router.navigate(['/success']);
-
+    if (this.isQuestionComplete(finalStep) && this.arePreviousStepsValid()) {
+      this.router.navigate(['/success']);
       this.mainForm.reset();
       this.currentStep = 0;
+      this.maxReachedStep = 0;
+      this.returnStep = null;
     } else {
       this.mainForm.get(finalStep)?.markAllAsTouched();
     }
@@ -352,9 +438,14 @@ export class TestComponent implements OnInit{
       return true;
     }
 
-    if ((questionPath === 'missingUnReplacedTeeth' || questionPath === 'decayedTeeth' || questionPath === 'rootCanalTreatedTeeth' || questionPath === 'accidentDamagedTeeth') && choiceControl?.value === 'Ja') {
+    if (
+      (questionPath === 'missingUnReplacedTeeth' ||
+        questionPath === 'decayedTeeth' ||
+        questionPath === 'rootCanalTreatedTeeth' ||
+        questionPath === 'accidentDamagedTeeth') &&
+      choiceControl?.value === 'Ja'
+    ) {
       const controlsToCheck = ['markTeeth', 'markTeeth2', 'markTeeth3', 'markTeeth4', 'markTeeth5', 'markTeeth6'];
-
       return controlsToCheck.some(controlName => {
         const ctrl = group.get(controlName);
         return ctrl?.value?.length > 0;
@@ -364,7 +455,7 @@ export class TestComponent implements OnInit{
     const isValidRecursively = (ctrl: AbstractControl, parent?: FormGroup): boolean => {
       if (ctrl instanceof FormGroup) {
         return Object.entries(ctrl.controls).every(([key, childCtrl]) => {
-          if (key === 'endDate' && ctrl.get('checkbox')?.value === true) {
+          if (key === 'endDate' && parent?.get('checkbox')?.value === true) {
             return true;
           }
           return isValidRecursively(childCtrl, ctrl);
@@ -372,24 +463,43 @@ export class TestComponent implements OnInit{
       }
 
       if (ctrl instanceof FormArray) {
-        return ctrl.controls.every(item => isValidRecursively(item));
+        return ctrl.controls.every(item => isValidRecursively(item, item as FormGroup));
       }
 
       return ctrl.valid;
     };
 
-    if (questionPath === 'drugs') {
+    const arrayFields: Record<string, string> = {
+      'drugs': 'ifTakingDrugs',
+      'medications': 'ifTakingMeds'
+    };
+
+    if (questionPath in arrayFields) {
       const choice = group.get('choice')?.value;
-      const doYouTakeDrugs = group.get('doYouTakeDrugs')?.value;
-      if (choice === 'Nein' || doYouTakeDrugs === 'Nein') {
-        return true;
+      const secondChoice = group.get('doYouTakeDrugs')?.value;
+
+      if (choice === 'Nein' || (questionPath === 'drugs' && secondChoice === 'Nein')) {
+        return group.valid;
       }
-      if (doYouTakeDrugs === 'Ja') {
-        const formArray = group.get('ifTakingDrugs') as FormArray;
-        const arrayValid = formArray.controls.every(item => isValidRecursively(item));
-        return group.valid && arrayValid;
-      }
+
+      if (questionPath === 'drugs' && secondChoice !== 'Ja') return false;
+
+      const arrayControlName = arrayFields[questionPath];
+      const formArray = group.get(arrayControlName) as FormArray;
+
+      const arrayValid = formArray.controls.every(item => {
+        const formGroup = item as FormGroup;
+        return Object.entries(formGroup.controls).every(([key, control]) => {
+          if (key === 'endDate' && formGroup.get('checkbox')?.value === true) {
+            return true;
+          }
+          return control.valid;
+        });
+      });
+
+      return group.valid && arrayValid;
     }
+
     return isValidRecursively(group);
   }
 
@@ -398,8 +508,11 @@ export class TestComponent implements OnInit{
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.imagePreview[index] = file.name;
+      this.mainForm.get('medicalReport.uploadedReport')?.setValue(file.name);
     }
   }
 
-  protected readonly setTestabilityGetter = setTestabilityGetter;
+  isStepInvalid(stepIndex: number): boolean {
+    return this.invalidSteps.has(stepIndex);
+  }
 }

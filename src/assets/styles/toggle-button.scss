@@ -13,11 +13,18 @@
   }
   &:has(.mat-button-toggle-checked) {
     border: 1px solid #28A54A;
+    @include mobile-view{
+      width: 100%;
+    }
   }
   &--gap{
     margin-bottom: 16px;
+    @include mobile-view{
+      width: 100%;
+    }
   }
   //buttons
+
   ::ng-deep .mat-button-toggle {
     display: flex;
     flex: 1;

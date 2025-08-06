@@ -25,7 +25,7 @@
           </div>
         </mat-expansion-panel>
 
-        @if (currentStep >= 1) {
+        @if (maxReachedStep >= 1) {
           <mat-expansion-panel
             id="step-1"
             [class.disabled]="!isQuestionComplete('everBeenInsuredWithHelsana')"
@@ -78,7 +78,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 2) {
+        @if (maxReachedStep >= 2) {
           <mat-expansion-panel
             id="step-2"
             [class.disabled]="!isQuestionComplete('personalInfo')"
@@ -149,7 +149,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 3) {
+        @if (maxReachedStep >= 3) {
           <mat-expansion-panel
             id="step-3"
             [class.disabled]="!isQuestionComplete('doctorInfo')"
@@ -223,11 +223,11 @@
                           <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.' + i +'.doctorStreet')">
                             <input type="text" formControlName="doctorStreet" matInput placeholder="Strasse" />
                             @if (hasRequiredValidation('medicalTreatments.choiceIfYes.' + i +'.doctorStreet')) {
-                              <mat-error>Strasse ist erforderlich</mat-error>
+                              <mat-error>Strasse ist erforderlich,nur Text!</mat-error>
                             }
                           </mat-form-field>
                           <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.' + i +'.doctorNumber')">
-                            <input type="number" formControlName="doctorNumber" matInput placeholder="Nr" />
+                            <input type="text" formControlName="doctorNumber" matInput placeholder="Nr" />
                             @if (hasRequiredValidation('medicalTreatments.choiceIfYes.' + i +'.doctorNumber')) {
                               <mat-error>Nr ist erforderlich</mat-error>
                             }
@@ -237,13 +237,13 @@
                           <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.'+ i +'.doctorZipCode')">
                             <input type="text" formControlName="doctorZipCode" matInput placeholder="ZIP" />
                             @if (hasRequiredValidation('medicalTreatments.choiceIfYes.'+ i +'.doctorZipCode')) {
-                              <mat-error>PLZ ist erforderlich</mat-error>
+                              <mat-error>ZIP ist erforderlich</mat-error>
                             }
                           </mat-form-field>
                           <mat-form-field [class.has-error]="hasRequiredValidation('medicalTreatments.choiceIfYes.'+ i +'.doctorCity')">
                             <input type="text" formControlName="doctorCity" matInput placeholder="City" />
                             @if (hasRequiredValidation('medicalTreatments.choiceIfYes.'+ i +'.doctorCity')) {
-                              <mat-error>Stadt ist erforderlich und nur Text</mat-error>
+                              <mat-error>City ist erforderlich,nur Text</mat-error>
                             }
                           </mat-form-field>
                         </div>
@@ -268,7 +268,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 4) {
+        @if (maxReachedStep >= 4) {
           <mat-expansion-panel
             id="step-4"
             [class.disabled]="!isQuestionComplete('medicalTreatments')"
@@ -302,7 +302,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 5) {
+        @if (maxReachedStep >= 5) {
           <mat-expansion-panel
             id="step-5"
             [class.disabled]="!isQuestionComplete('rejectedByInsurance')"
@@ -362,7 +362,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 6) {
+        @if (maxReachedStep >= 6) {
           <mat-expansion-panel
             id="step-6"
             [class.disabled]="!isQuestionComplete('misaligned')"
@@ -391,7 +391,7 @@
                       <mat-form-field [class.has-error]="hasRequiredValidation('disability.ifDisabilityYes.' + i +'.typeOfDisability')">
                         <input type="text" formControlName="typeOfDisability" matInput placeholder="Art der Invalidität / des Geburtsgebrechens?" value="typeOfDisability">
                         @if (hasRequiredValidation('disability.ifDisabilityYes.' + i +'.typeOfDisability')) {
-                          <mat-error>Behinderung eingeben!</mat-error>
+                          <mat-error>Behinderung eingeben,nur Text!</mat-error>
                         }
                       </mat-form-field>
                       <p>Bitte lade deine IV-Verfügung hoch:</p>
@@ -438,7 +438,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 7) {
+        @if (maxReachedStep >= 7) {
           <mat-expansion-panel
             id="step-7"
             [class.disabled]="!isQuestionComplete('disability')"
@@ -480,7 +480,7 @@
                             <mat-error>Datum auswählen!</mat-error>
                           }
                         </mat-form-field>
-                        <mat-form-field [class.has-error]="hasRequiredValidation('medications.ifTakingMeds.'+ i +'.endDates')">
+                        <mat-form-field [class.has-error]="hasRequiredValidation('medications.ifTakingMeds.'+ i +'.endDate')">
                         <input matInput [matDatepicker]="endPicker"
                                  [min]="medGroup.get('startDate')?.value"
                                  formControlName="endDate"
@@ -518,7 +518,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 8) {
+        @if (maxReachedStep >= 8) {
           <mat-expansion-panel
             id="step-8"
             [class.disabled]="!isQuestionComplete('medications')"
@@ -557,7 +557,7 @@
                         </div>
                         <p>Ja, welche?</p>
                         <mat-form-field [class.has-error]="hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.whichOne')">
-                          <input type="text" formControlName="whichOne" matInput placeholder="Hier eingeben..." value="whichOne">
+                          <input type="text" formControlName="whichOne" matInput placeholder="Hier eingeben..." >
                           @if (hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.whichOne')) {
                             <mat-error>Droge eingeben!</mat-error>
                           }
@@ -643,7 +643,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 9) {
+        @if (maxReachedStep >= 9) {
           <mat-expansion-panel
             id="step-9"
             [class.disabled]="!isQuestionComplete('drugs')"
@@ -680,7 +680,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 10) {
+        @if (maxReachedStep >= 10) {
           <mat-expansion-panel
             id="step-10"
             [class.disabled]="!isQuestionComplete('furtherQuestions')"
@@ -709,7 +709,6 @@
                   #fileInput2
                   accept="image/*"
                   (change)="onFileSelected($event, 2)"
-                  formControlName="uploadedReport"
                   hidden
                 />
               </div>
@@ -721,7 +720,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 11) {
+        @if (maxReachedStep >= 11) {
           <button class="dental-part">Dental Fragen</button>
           <mat-expansion-panel
             id="step-11"
@@ -748,7 +747,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 12) {
+        @if (maxReachedStep >= 12) {
           <mat-expansion-panel
             id="step-12"
             [class.disabled]="!isQuestionComplete('dentalCheckUp')"
@@ -783,7 +782,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 13) {
+        @if (maxReachedStep >= 13) {
           <mat-expansion-panel
             id="step-13"
             [class.disabled]="!isQuestionComplete('teethDisease')"
@@ -822,7 +821,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 14) {
+        @if (maxReachedStep >= 14) {
           <mat-expansion-panel
             id="step-14"
             [class.disabled]="!isQuestionComplete('upToDateCheckUp')"
@@ -857,7 +856,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 15) {
+        @if (maxReachedStep >= 15) {
           <mat-expansion-panel
             id="step-15"
             [class.disabled]="!isQuestionComplete('treatmentPlanned')"
@@ -892,7 +891,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 16) {
+        @if (maxReachedStep >= 16) {
           <mat-expansion-panel
             id="step-16"
             [class.disabled]="!isQuestionComplete('abrasionsOrErosions')"
@@ -927,7 +926,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 17) {
+        @if (maxReachedStep >= 17) {
           <mat-expansion-panel
             id="step-17"
             [class.disabled]="!isQuestionComplete('misalignmentTeethOrJaw')"
@@ -964,7 +963,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 18) {
+        @if (maxReachedStep >= 18) {
           <mat-expansion-panel
             id="step-18"
             [class.disabled]="!isQuestionComplete('areFillingsPresent')"
@@ -1001,7 +1000,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 19) {
+        @if (maxReachedStep >= 19) {
           <mat-expansion-panel
             id="step-19"
             [class.disabled]="!isQuestionComplete('fixedOrRemovedDenture')"
@@ -1028,7 +1027,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 20) {
+        @if (maxReachedStep >= 20) {
           <mat-expansion-panel
             id="step-20"
             [class.disabled]="!isQuestionComplete('oralHygiene')"
@@ -1055,7 +1054,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 21) {
+        @if (maxReachedStep >= 21) {
           <mat-expansion-panel
             id="step-21"
             [class.disabled]="!isQuestionComplete('periodontium')"
@@ -1168,7 +1167,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 22) {
+        @if (maxReachedStep >= 22) {
           <mat-expansion-panel
             id="step-22"
             [class.disabled]="!isQuestionComplete('missingUnReplacedTeeth')"
@@ -1281,7 +1280,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 23) {
+        @if (maxReachedStep >= 23) {
           <mat-expansion-panel
             id="step-23"
             [class.disabled]="!isQuestionComplete('decayedTeeth')"
@@ -1394,7 +1393,7 @@
           </mat-expansion-panel>
         }
 
-        @if (currentStep >= 24) {
+        @if (maxReachedStep >= 24) {
           <mat-expansion-panel
             id="step-24"
             [class.disabled]="!isQuestionComplete('rootCanalTreatedTeeth')"
