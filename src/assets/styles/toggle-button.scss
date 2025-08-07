@@ -23,7 +23,6 @@
       width: 100%;
     }
   }
-  //buttons
 
   ::ng-deep .mat-button-toggle {
     display: flex;
@@ -41,12 +40,11 @@
     box-shadow: none !important;
   }
 
-  //checked buttons
   ::ng-deep .mat-button-toggle-checked {
     background-color: transparent !important;
     color: white !important;
   }
-  //after checked buttons
+
   ::ng-deep .mat-button-toggle-checked::before {
     content: "";
     position: absolute;
@@ -56,15 +54,12 @@
     z-index: -1;
   }
 
-  //middle line buttons
   ::ng-deep .mat-button-toggle + .mat-button-toggle {
     border-left: 1px solid #a7f3d0;
   }
-  //removed tick sign
   ::ng-deep .mat-pseudo-checkbox{
     display: none !important;
   }
-  //removed spacing from text to tick sign
   ::ng-deep .mat-button-toggle-checked .mat-button-toggle-button:has(.mat-button-toggle-checkbox-wrapper){
     padding: 0;
   }

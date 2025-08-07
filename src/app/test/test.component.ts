@@ -1,9 +1,9 @@
-import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, inject, OnInit } from '@angular/core';
-import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
-import { MatError, MatFormField, MatInput, MatInputModule } from '@angular/material/input';
-import { MatSelect } from '@angular/material/select';
-import { MatNativeDateModule, MatOption, provideNativeDateAdapter } from '@angular/material/core';
+import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
+import {MatError, MatFormField, MatInput, MatInputModule} from '@angular/material/input';
+import {MatSelect} from '@angular/material/select';
+import {MatNativeDateModule, MatOption, provideNativeDateAdapter} from '@angular/material/core';
 import {
   DRUGS_HOW_OFTEN_OPTIONS,
   INTERVAL_OPTIONS,
@@ -15,14 +15,14 @@ import {
   TEETH5_OPTIONS,
   TEETH6_OPTIONS
 } from '../../option';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
-import { MatCheckbox } from '@angular/material/checkbox';
-import { MatButton } from '@angular/material/button';
-import { checkboxValidator } from '../validators/checkbox-validator';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import {MatAccordion, MatExpansionPanel, MatExpansionPanelHeader} from '@angular/material/expansion';
+import {MatCheckbox} from '@angular/material/checkbox';
+import {MatButton} from '@angular/material/button';
+import {checkboxValidator} from '../validators/checkbox-validator';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-test',
@@ -49,6 +49,7 @@ import { Router } from '@angular/router';
   templateUrl: './test.component.html',
   providers: [provideNativeDateAdapter()],
   styleUrl: './test.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestComponent implements OnInit {
   private _fb = inject(FormBuilder);
@@ -75,7 +76,9 @@ export class TestComponent implements OnInit {
   constructor(private router: Router) {
     this.minDate = new Date();
     this.minDate.setFullYear(this.minDate.getFullYear() - 1);
+  }
 
+  ngOnInit() {
     this.mainForm.valueChanges.subscribe(() => {
       this.updateInvalidSteps();
       const completed = Object.entries(this.mainForm.controls).reduce((acc, [key, control]) => {
@@ -86,9 +89,7 @@ export class TestComponent implements OnInit {
       }, {} as any);
       console.log('Completed form groups:', completed);
     });
-  }
 
-  ngOnInit() {
     const doctorGroup = this.mainForm.get('doctorInfo') as FormGroup;
     doctorGroup.get('checkbox')?.valueChanges.subscribe((checked: boolean) => {
       Object.entries(doctorGroup.controls).forEach(([key, control]) => {
@@ -162,7 +163,7 @@ export class TestComponent implements OnInit {
       pregnancyExpected: ['',Validators.required],
     }),
     medicalReport: this._fb.group({
-      uploadedReport: ['', Validators.required],
+      uploadedReport: [null, Validators.required],
     }),
     dentalCheckUp: this._fb.group({
       checkUpDate: ['', Validators.required],
@@ -221,24 +222,13 @@ export class TestComponent implements OnInit {
 
   createIfTakingDrugs() {
     const drugsGroup = this._fb.group({
-      whichOne: [''],
-      howOften: [''],
+      whichOne: ['',Validators.required],
+      howOften: ['',Validators.required],
       startDate: ['',Validators.required],
       endDate: [''],
       checkbox: [false],
     });
-    drugsGroup.get('checkbox')?.valueChanges.subscribe(checked => {
-      const endDateControl = drugsGroup.get('endDate');
-      if (checked) {
-        endDateControl?.clearValidators();
-        endDateControl?.setValue('');
-        endDateControl?.disable({ emitEvent: false });
-      } else {
-        endDateControl?.setValidators([Validators.required]);
-        endDateControl?.enable({ emitEvent: false });
-      }
-      endDateControl?.updateValueAndValidity({ emitEvent: false });
-    });
+    this.checkBoxEndDate(drugsGroup);
     return drugsGroup;
   }
 
@@ -249,18 +239,7 @@ export class TestComponent implements OnInit {
       endDate: [''],
       checkbox: [false],
     });
-    medGroup.get('checkbox')?.valueChanges.subscribe(checked => {
-      const endDateControl = medGroup.get('endDate');
-      if (checked) {
-        endDateControl?.clearValidators();
-        endDateControl?.setValue('');
-        endDateControl?.disable({ emitEvent: false });
-      } else {
-        endDateControl?.setValidators([Validators.required]);
-        endDateControl?.enable({ emitEvent: false });
-      }
-      endDateControl?.updateValueAndValidity({ emitEvent: false });
-    });
+    this.checkBoxEndDate(medGroup);
     return medGroup;
   }
 
@@ -322,6 +301,23 @@ export class TestComponent implements OnInit {
     return control?.value === true;
   }
 
+  private checkBoxEndDate(group: FormGroup, checkboxName: string = 'checkbox', endDateName: string = 'endDate') {
+    const checkboxControl = group.get(checkboxName);
+    const endDateControl = group.get(endDateName);
+
+    checkboxControl?.valueChanges.subscribe(checked => {
+      if (checked) {
+        endDateControl?.clearValidators();
+        endDateControl?.setValue('');
+        endDateControl?.disable({ emitEvent: false });
+      } else {
+        endDateControl?.setValidators([Validators.required]);
+        endDateControl?.enable({ emitEvent: false });
+      }
+      endDateControl?.updateValueAndValidity({ emitEvent: false });
+    });
+  }
+
   updateInvalidSteps() {
     this.invalidSteps.clear();
     const stepKeys = Object.keys(this.mainForm.controls);
@@ -343,45 +339,52 @@ export class TestComponent implements OnInit {
   }
 
   goToNextStep() {
+    this.goNext();
+  }
+
+  private goNext(){
     const stepKeys = Object.keys(this.mainForm.controls);
     const currentGroup = this.mainForm.get(stepKeys[this.currentStep]);
 
     if (this.isQuestionComplete(stepKeys[this.currentStep]) && this.arePreviousStepsValid()) {
-      if (this.returnStep !== null && this.returnStep > this.currentStep) {
-        this.currentStep = this.returnStep;
-        this.returnStep = null;
-      } else {
-        this.currentStep++;
-        this.maxReachedStep = Math.max(this.maxReachedStep, this.currentStep);
-      }
-      setTimeout(() => {
-        const el = document.getElementById(`step-${this.currentStep}`);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          const firstInvalidField = el.querySelector('.has-error input, .has-error select');
-          if (firstInvalidField) {
-            (firstInvalidField as HTMLElement).focus();
-          }
-        }
-      }, 100);
+      this.advanceStep();
+      this.scrollToStep(this.currentStep);
     } else {
       currentGroup?.markAllAsTouched();
-      if (!this.arePreviousStepsValid()) {
-        this.returnStep = this.currentStep;
-        const firstInvalidStep = Array.from(this.invalidSteps).sort((a, b) => a - b)[0];
-        if (firstInvalidStep !== undefined) {
-          this.currentStep = firstInvalidStep;
-          setTimeout(() => {
-            const el = document.getElementById(`step-${this.currentStep}`);
-            if (el) {
-              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              const firstInvalidField = el.querySelector('.has-error input, .has-error select');
-              if (firstInvalidField) {
-                (firstInvalidField as HTMLElement).focus();
-              }
-            }
-          }, 100);
+      this.handleInvalidSteps();
+    }
+  }
+
+  private advanceStep() {
+    if (this.returnStep !== null && this.returnStep > this.currentStep) {
+      this.currentStep = this.returnStep;
+      this.returnStep = null;
+    } else {
+      this.currentStep++;
+      this.maxReachedStep = Math.max(this.maxReachedStep, this.currentStep);
+    }
+  }
+
+  private scrollToStep(step: number) {
+    setTimeout(() => {
+      const el = document.getElementById(`step-${step}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const firstInvalidField = el.querySelector('.has-error input, .has-error select');
+        if (firstInvalidField) {
+          (firstInvalidField as HTMLElement).focus();
         }
+      }
+    }, 200);
+  }
+
+  private handleInvalidSteps() {
+    if (!this.arePreviousStepsValid()) {
+      this.returnStep = this.currentStep;
+      const firstInvalidStep = Array.from(this.invalidSteps).sort((a, b) => a - b)[0];
+      if (firstInvalidStep !== undefined) {
+        this.currentStep = firstInvalidStep;
+        this.scrollToStep(this.currentStep);
       }
     }
   }
@@ -392,7 +395,7 @@ export class TestComponent implements OnInit {
       setTimeout(() => {
         const el = document.getElementById(elementId);
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+      }, 200);
     }
   }
 
@@ -405,15 +408,73 @@ export class TestComponent implements OnInit {
         if (el) {
           el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-      }, 100);
+      }, 200);
+    }
+  }
+
+  isQuestionComplete(questionPath: string): boolean {
+    const group = this.mainForm.get(questionPath) as FormGroup;
+    if (!group) return false;
+
+    const choiceControl = group.get('choice');
+    const checkboxControl = group.get('checkbox');
+
+    if (choiceControl?.value === 'Nein') {
+      return choiceControl.valid;
+    }
+
+    if (checkboxControl?.value === true) {
+      return true;
+    }
+
+    const teethPaths = [
+      'missingUnReplacedTeeth',
+      'decayedTeeth',
+      'rootCanalTreatedTeeth',
+      'accidentDamagedTeeth'
+    ];
+
+    if (teethPaths.includes(questionPath) && choiceControl?.value === 'Ja') {
+      const teethControls = [
+        'markTeeth', 'markTeeth2', 'markTeeth3',
+        'markTeeth4', 'markTeeth5', 'markTeeth6'
+      ];
+      return teethControls.some(name => group.get(name)?.value?.length > 0);
+    }
+
+    if (questionPath === 'drugs') {
+      const doYouTakeDrugs = group.get('doYouTakeDrugs')?.value;
+      if (doYouTakeDrugs === 'Nein') {
+        const otherValid = Object.entries(group.controls)
+          .filter(([key]) => key !== 'ifTakingDrugs')
+          .every(([, ctrl]) => ctrl.valid);
+        return otherValid;
+      }
+      if (doYouTakeDrugs !== 'Ja') {
+        return false;
+      }
+    }
+    return group.valid;
+  }
+
+  selectedFile: File | null = null;
+
+  onFileSelected(event: Event, index: number): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.selectedFile = file;
+      this.imagePreview[index] = file.name;
     }
   }
 
   finishedForm() {
+    this.goNext();
+
     const stepKeys = Object.keys(this.mainForm.controls);
     const finalStep = stepKeys[stepKeys.length - 1];
 
-    if (this.isQuestionComplete(finalStep) && this.arePreviousStepsValid()) {
+    if (this.isQuestionComplete(finalStep) && this.arePreviousStepsValid() && this.invalidSteps.size === 0) {
       this.router.navigate(['/success']);
       this.mainForm.reset();
       this.currentStep = 0;
@@ -424,95 +485,4 @@ export class TestComponent implements OnInit {
     }
   }
 
-  isQuestionComplete(questionPath: string): boolean {
-    const group = this.mainForm.get(questionPath) as FormGroup;
-    if (!group) return false;
-
-    const choiceControl = group.get('choice');
-    if (choiceControl?.value === 'Nein') {
-      return choiceControl.valid;
-    }
-
-    const checkboxControl = group.get('checkbox');
-    if (checkboxControl?.value === true) {
-      return true;
-    }
-
-    if (
-      (questionPath === 'missingUnReplacedTeeth' ||
-        questionPath === 'decayedTeeth' ||
-        questionPath === 'rootCanalTreatedTeeth' ||
-        questionPath === 'accidentDamagedTeeth') &&
-      choiceControl?.value === 'Ja'
-    ) {
-      const controlsToCheck = ['markTeeth', 'markTeeth2', 'markTeeth3', 'markTeeth4', 'markTeeth5', 'markTeeth6'];
-      return controlsToCheck.some(controlName => {
-        const ctrl = group.get(controlName);
-        return ctrl?.value?.length > 0;
-      });
-    }
-
-    const isValidRecursively = (ctrl: AbstractControl, parent?: FormGroup): boolean => {
-      if (ctrl instanceof FormGroup) {
-        return Object.entries(ctrl.controls).every(([key, childCtrl]) => {
-          if (key === 'endDate' && parent?.get('checkbox')?.value === true) {
-            return true;
-          }
-          return isValidRecursively(childCtrl, ctrl);
-        });
-      }
-
-      if (ctrl instanceof FormArray) {
-        return ctrl.controls.every(item => isValidRecursively(item, item as FormGroup));
-      }
-
-      return ctrl.valid;
-    };
-
-    const arrayFields: Record<string, string> = {
-      'drugs': 'ifTakingDrugs',
-      'medications': 'ifTakingMeds'
-    };
-
-    if (questionPath in arrayFields) {
-      const choice = group.get('choice')?.value;
-      const secondChoice = group.get('doYouTakeDrugs')?.value;
-
-      if (choice === 'Nein' || (questionPath === 'drugs' && secondChoice === 'Nein')) {
-        return group.valid;
-      }
-
-      if (questionPath === 'drugs' && secondChoice !== 'Ja') return false;
-
-      const arrayControlName = arrayFields[questionPath];
-      const formArray = group.get(arrayControlName) as FormArray;
-
-      const arrayValid = formArray.controls.every(item => {
-        const formGroup = item as FormGroup;
-        return Object.entries(formGroup.controls).every(([key, control]) => {
-          if (key === 'endDate' && formGroup.get('checkbox')?.value === true) {
-            return true;
-          }
-          return control.valid;
-        });
-      });
-
-      return group.valid && arrayValid;
-    }
-
-    return isValidRecursively(group);
-  }
-
-  onFileSelected(event: Event, index: number): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.imagePreview[index] = file.name;
-      this.mainForm.get('medicalReport.uploadedReport')?.setValue(file.name);
-    }
-  }
-
-  isStepInvalid(stepIndex: number): boolean {
-    return this.invalidSteps.has(stepIndex);
-  }
 }

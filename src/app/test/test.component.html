@@ -20,7 +20,7 @@
               <mat-button-toggle value="Ja">Ja</mat-button-toggle>
             </mat-button-toggle-group>
             <div class="navigation-buttons">
-              <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('everBeenInsuredWithHelsana')">Next</button>
+              <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
             </div>
           </div>
         </mat-expansion-panel>
@@ -72,7 +72,7 @@
               </div>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('personalInfo')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -143,7 +143,7 @@
               </div>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('doctorInfo')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -262,7 +262,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('medicalTreatments')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -296,7 +296,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('rejectedByInsurance')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()" >Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -356,7 +356,7 @@
               </mat-button-toggle-group>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('misaligned')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -432,7 +432,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('disability')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -512,7 +512,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('medications')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -556,14 +556,14 @@
                           <p (click)="removeFromFormArray('drugs.ifTakingDrugs', i)">-Entfernene</p>
                         </div>
                         <p>Ja, welche?</p>
-                        <mat-form-field [class.has-error]="hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.whichOne')">
+                        <mat-form-field  [class.has-error]="hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.whichOne')">
                           <input type="text" formControlName="whichOne" matInput placeholder="Hier eingeben..." >
                           @if (hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.whichOne')) {
                             <mat-error>Droge eingeben!</mat-error>
                           }
                         </mat-form-field>
                         <p>Wie oft?</p>
-                        <mat-form-field [class.has-error]="hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.howOften')">
+                        <mat-form-field class="select-class" [class.has-error]="hasRequiredValidation('drugs.ifTakingDrugs.'+ i +'.howOften')">
                           <mat-select formControlName="howOften" placeholder="Hier eingeben...">
                             @for (option of drugOptions; track option.value) {
                               <mat-option [value]="option.value">{{ option.label }}</mat-option>
@@ -637,7 +637,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('drugs')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -674,7 +674,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('furtherQuestions')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -708,13 +708,14 @@
                   type="file"
                   #fileInput2
                   accept="image/*"
+                  formControlName="uploadedReport"
                   (change)="onFileSelected($event, 2)"
                   hidden
                 />
               </div>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('medicalReport')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -741,7 +742,7 @@
               </mat-form-field>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('dentalCheckUp')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -776,7 +777,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('teethDisease')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -815,7 +816,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('upToDateCheckUp')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -850,7 +851,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('treatmentPlanned')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()" >Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -885,7 +886,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('abrasionsOrErosions')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -920,7 +921,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('misalignmentTeethOrJaw')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -957,7 +958,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('areFillingsPresent')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -994,7 +995,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('fixedOrRemovedDenture')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()" >Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -1021,7 +1022,7 @@
               </mat-button-toggle-group>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('oralHygiene')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -1048,7 +1049,7 @@
               </mat-button-toggle-group>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('periodontium')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -1161,7 +1162,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('missingUnReplacedTeeth')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -1181,7 +1182,7 @@
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
                 appearance="legacy"
-                (change)="scrollToSubQuestion('decayedTeeth.choice','step-22')">
+                (change)="scrollToSubQuestion('decayedTeeth.choice','step.22')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -1274,7 +1275,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('decayedTeeth')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -1387,7 +1388,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" [disabled]="!isQuestionComplete('rootCanalTreatedTeeth')">Next</button>
+                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -1498,7 +1499,7 @@
                   </div>
                 </div>
               }
-              <button class="finish-button" [disabled]="!isQuestionComplete('accidentDamagedTeeth')" (click)="finishedForm()">Fertig</button>
+              <button class="finish-button" (click)="finishedForm()">Fertig</button>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
               </div>
