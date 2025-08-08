@@ -20,7 +20,7 @@
               <mat-button-toggle value="Ja">Ja</mat-button-toggle>
             </mat-button-toggle-group>
             <div class="navigation-buttons">
-              <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+              <button mat-raised-button color="primary" (click)="goNext()">Next</button>
             </div>
           </div>
         </mat-expansion-panel>
@@ -72,7 +72,7 @@
               </div>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -121,7 +121,7 @@
                   </div>
                   <div class="pair pair-30-70">
                     <mat-form-field [class.has-error]="hasRequiredValidation('doctorInfo.plz')">
-                      <input type="number" formControlName="plz" matInput placeholder="PLZ" />
+                      <input type="text" formControlName="plz" matInput placeholder="PLZ" />
                       @if (hasRequiredValidation('doctorInfo.plz')) {
                         <mat-error>PLZ ist erforderlich</mat-error>
                       }
@@ -143,7 +143,7 @@
               </div>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -262,7 +262,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -296,7 +296,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" >Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()" >Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -356,7 +356,7 @@
               </mat-button-toggle-group>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -432,7 +432,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -512,7 +512,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -637,7 +637,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -674,7 +674,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -715,7 +715,7 @@
               </div>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -742,7 +742,7 @@
               </mat-form-field>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -777,7 +777,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -816,7 +816,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -851,7 +851,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" >Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()" >Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -886,7 +886,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -921,7 +921,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -958,7 +958,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -995,7 +995,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()" >Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()" >Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -1022,7 +1022,7 @@
               </mat-button-toggle-group>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -1049,7 +1049,7 @@
               </mat-button-toggle-group>
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -1162,7 +1162,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -1182,7 +1182,7 @@
                 formControlName="choice"
                 class="custom-toggle-group custom-toggle-group--gap"
                 appearance="legacy"
-                (change)="scrollToSubQuestion('decayedTeeth.choice','step.22')">
+                (change)="scrollToSubQuestion('decayedTeeth.choice','step-22')">
                 <mat-button-toggle value="Nein">Nein</mat-button-toggle>
                 <mat-button-toggle value="Ja">Ja</mat-button-toggle>
               </mat-button-toggle-group>
@@ -1275,7 +1275,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>
@@ -1388,7 +1388,7 @@
               }
               <div class="navigation-buttons">
                 <button mat-button (click)="goToPreviousStep()">Previous</button>
-                <button mat-raised-button color="primary" (click)="goToNextStep()">Next</button>
+                <button mat-raised-button color="primary" (click)="goNext()">Next</button>
               </div>
             </div>
           </mat-expansion-panel>

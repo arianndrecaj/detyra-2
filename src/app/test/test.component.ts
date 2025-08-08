@@ -1,5 +1,5 @@
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 import {MatError, MatFormField, MatInput, MatInputModule} from '@angular/material/input';
 import {MatSelect} from '@angular/material/select';
@@ -33,10 +33,6 @@ import {Router} from '@angular/router';
     ReactiveFormsModule,
     MatButtonToggleGroup,
     MatButtonToggle,
-    MatFormField,
-    MatSelect,
-    MatOption,
-    MatInput,
     MatAccordion,
     MatExpansionPanel,
     MatExpansionPanelHeader,
@@ -44,12 +40,13 @@ import {Router} from '@angular/router';
     MatCheckbox,
     MatButton,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatOption,
+    MatSelect
   ],
   templateUrl: './test.component.html',
   providers: [provideNativeDateAdapter()],
   styleUrl: './test.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestComponent implements OnInit {
   private _fb = inject(FormBuilder);
@@ -57,6 +54,7 @@ export class TestComponent implements OnInit {
   maxReachedStep = 0;
   returnStep: number | null = null;
   imagePreview: string[] = [];
+  selectedFile: File | null = null;
   minDate: Date;
   NAME_PATTERN = /^[a-zA-ZäöüÄÖÜß\s]+$/;
   NUMBER_PATTERN = /^\d*\.?\d*$/;
@@ -123,9 +121,9 @@ export class TestComponent implements OnInit {
       vorname: ['', [Validators.required, Validators.pattern(this.NAME_PATTERN)]],
       nachname: ['', [Validators.required, Validators.pattern(this.NAME_PATTERN)]],
       strasse: ['', Validators.required],
-      nr: ['', Validators.required],
-      plz: ['', Validators.required],
-      ort: ['', Validators.required],
+      nr: ['', [Validators.required, Validators.pattern(this.NUMBER_PATTERN)]],
+      plz: ['', [Validators.required, Validators.pattern(this.NUMBER_PATTERN)]],
+      ort: ['', [Validators.required, Validators.pattern(this.NUMBER_PATTERN)]],
       checkbox: [false],
     }, { validators: checkboxValidator() }),
     medicalTreatments: this._fb.group({
@@ -318,7 +316,7 @@ export class TestComponent implements OnInit {
     });
   }
 
-  updateInvalidSteps() {
+  private updateInvalidSteps() {
     this.invalidSteps.clear();
     const stepKeys = Object.keys(this.mainForm.controls);
     stepKeys.forEach((key, index) => {
@@ -328,21 +326,7 @@ export class TestComponent implements OnInit {
     });
   }
 
-  arePreviousStepsValid(): boolean {
-    const stepKeys = Object.keys(this.mainForm.controls);
-    for (let i = 0; i < this.currentStep; i++) {
-      if (!this.isQuestionComplete(stepKeys[i])) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  goToNextStep() {
-    this.goNext();
-  }
-
-  private goNext(){
+   goNext(){
     const stepKeys = Object.keys(this.mainForm.controls);
     const currentGroup = this.mainForm.get(stepKeys[this.currentStep]);
 
@@ -353,6 +337,16 @@ export class TestComponent implements OnInit {
       currentGroup?.markAllAsTouched();
       this.handleInvalidSteps();
     }
+  }
+
+  private arePreviousStepsValid(): boolean {
+    const stepKeys = Object.keys(this.mainForm.controls);
+    for (let i = 0; i < this.currentStep; i++) {
+      if (!this.isQuestionComplete(stepKeys[i])) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private advanceStep() {
@@ -403,12 +397,7 @@ export class TestComponent implements OnInit {
     if (this.currentStep > 0) {
       this.currentStep--;
       this.returnStep = null;
-      setTimeout(() => {
-        const el = document.getElementById(`step-${this.currentStep}`);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 200);
+      this.scrollToStep(this.currentStep);
     }
   }
 
@@ -457,8 +446,6 @@ export class TestComponent implements OnInit {
     return group.valid;
   }
 
-  selectedFile: File | null = null;
-
   onFileSelected(event: Event, index: number): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -468,21 +455,62 @@ export class TestComponent implements OnInit {
     }
   }
 
-  finishedForm() {
-    this.goNext();
+  removeNullJSON(obj: any): any {
+    if (obj === null || obj === undefined) {
+      return undefined;
+    }
 
+    if (Array.isArray(obj)) {
+      const cleanedArray = obj
+        .map(item => this.removeNullJSON(item))
+        .filter(item => item !== undefined);
+      return cleanedArray.length ? cleanedArray : undefined;
+    }
+
+    if (typeof obj === 'object') {
+      const cleanedObj: any = {};
+      for (const [key, value] of Object.entries(obj)) {
+        const cleanedValue = this.removeNullJSON(value);
+        if (cleanedValue !== undefined) {
+          cleanedObj[key] = cleanedValue;
+        }
+      }
+      return Object.keys(cleanedObj).length ? cleanedObj : undefined;
+    }
+
+    return obj;
+  }
+
+
+  finishedForm() {
     const stepKeys = Object.keys(this.mainForm.controls);
     const finalStep = stepKeys[stepKeys.length - 1];
+    const finalGroup = this.mainForm.get(finalStep);
 
     if (this.isQuestionComplete(finalStep) && this.arePreviousStepsValid() && this.invalidSteps.size === 0) {
-      this.router.navigate(['/success']);
+      const rawValue = this.mainForm.getRawValue();
+
+      const cleanedValue = this.removeNullJSON(rawValue);
+
+      console.log('Submitting cleaned form data:', cleanedValue);
+
+      this.router.navigate(['/success']).then(success => {
+        if (success) {
+          console.log('Navigation succeded!');
+        } else {
+          console.log('Navigation failed');
+        }
+      });
       this.mainForm.reset();
       this.currentStep = 0;
       this.maxReachedStep = 0;
       this.returnStep = null;
     } else {
-      this.mainForm.get(finalStep)?.markAllAsTouched();
+      finalGroup?.markAllAsTouched();
+      this.handleInvalidSteps();
+      this.scrollToStep(this.currentStep);
     }
   }
+
 
 }
