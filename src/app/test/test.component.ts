@@ -481,7 +481,6 @@ export class TestComponent implements OnInit {
     return obj;
   }
 
-
   finishedForm() {
     const stepKeys = Object.keys(this.mainForm.controls);
     const finalStep = stepKeys[stepKeys.length - 1];
@@ -511,6 +510,5 @@ export class TestComponent implements OnInit {
       this.scrollToStep(this.currentStep);
     }
   }
-
 
 }
